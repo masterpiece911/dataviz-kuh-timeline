@@ -29,125 +29,125 @@ function App() {
 
   const classes = useStyles();
 
-  const [ start, end, min, max ] = [ 1415, 1780, 0, 10 ];
+  const [start, end, min, max] = [1415, 1780, 0, 10];
 
-  const data = () => Array.from({length: end - start}, (v, k) => k + start).map((value) => {
-    return ({x: value, y: Math.random() * (max - min) + min})
+  const data = () => Array.from({ length: end - start }, (v, k) => k + start).map((value) => {
+    return ({ x: value, y: Math.random() * (max - min) + min })
   })
 
-  const [graphData, setGraphData, setLabel] = useState(data());
+  const [graphData, setGraphData] = useState(data());
   const [crossHairValues, setCrossHairValues] = useState([]);
-  const [selectedKaiser, setSelectedKaiser] = useState(pos_ferdinand_ii);
-  const inputLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(inputLabel.current);
-  }, []);
+  const [selectedKaiserIndex, setSelectedKaiserIndex] = useState(pos_ferdinand_ii);
+  
+  // const [labelWidth, setLabelWidth] = React.useState(0);
+  // React.useEffect(() => {
+  //   setLabelWidth(inputLabel.current);
+  // }, []);
 
   const kaiserData = kaiser.map((item) => {
-    let d = {x0: parseInt(item.start.substring(0,4)), x: parseInt(item.end.substring(0,4)), y0: -1, y: -2}
-    
-    console.log(d);
-    
+    let d = { x0: parseInt(item.start.substring(0, 4)), x: parseInt(item.end.substring(0, 4)), y0: -1, y: -2 }
 
     return (d)
   });
 
-  const range = () => { return([
-    kaiserData[selectedKaiser].x0 - 5,
-    kaiserData[selectedKaiser].x + 5
-  ])}  
+  const range = () => {
+    return ([
+      kaiserData[selectedKaiserIndex].x0 - 5,
+      kaiserData[selectedKaiserIndex].x + 5
+    ])
+  }
 
   const handleChange = event => {
-    setLabel(event.target.value);
+    setSelectedKaiserIndex(event.target.value);
   };
-  const hovered = (value, {index}) => {
+  const hovered = (value, { index }) => {
     setCrossHairValues([value])
     console.log(value.y);
-    
+
     console.log(crossHairValues);
   }
 
   const kaiserClicked = (index) => {
-    setSelectedKaiser(index);
+    setSelectedKaiserIndex(index);
   }
 
   return (
     <div className={classes.root}>
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit">
-          <MenuIcon/>
-        </IconButton>
-        <Typography variant="h6" className={classes.title } >
-          PROJECT TIMELINE
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" className={classes.menuButton} color="inherit">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title} >
+            PROJECT TIMELINE
         </Typography>
-        <Button color="inherit" onClick={() => setGraphData(data)}>RELOAD</Button>
-      </Toolbar>
-    </AppBar>
-    <FormControl variant="outlined" className={classes.formControl}>
-    <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-          Hier
+          <Button color="inherit" onClick={() => setGraphData(data)}>RELOAD</Button>
+        </Toolbar>
+      </AppBar>
+      <FormControl variant="filled" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">
+          HOFSTAAT
         </InputLabel>
         <Select
           labelId="demo-simple-select-outlined-label"
-          //value={age}
+          value={selectedKaiserIndex}
           id="demo-simple-select-outlined"
           onChange={handleChange}
-          labelWidth={labelWidth}
+          autoWidth
         >
-          {kaiser.map((item) => { return (
-            <MenuItem value={item.name} >
-              {item.name}
-            </MenuItem>            
-          )
+          {kaiser.map((item, index) => {
+            return (
+              <MenuItem key={item.ID} value={index} >
+                {item.NAME}
+              </MenuItem>
+            )
           })}
         </Select>
-    </FormControl>
-    <Typography variant="h3">
-      {'Title of Diagram'}
-    </Typography>
-    <FlexibleWidthXYPlot
-      height={600}
-      yDomain={[-5, 10]}
-      xDomain={range()}
-      animation
+      </FormControl>
+      <Typography variant="h3">
+        {'Title of Diagram'}
+      </Typography>
+      <FlexibleWidthXYPlot
+        height={600}
+        yDomain={[-5, 10]}
+        xDomain={range()}
+        animation
       >
 
-      <GradientDefs>
-        <linearGradient id="CoolGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#2699FB" stopOpacity={0.8}/>
-          <stop offset="100%" stopColor="#2699FB" stopOpacity={0.0} />
-        </linearGradient>
-      </GradientDefs>
+        <GradientDefs>
+          <linearGradient id="CoolGradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#2699FB" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#2699FB" stopOpacity={0.0} />
+          </linearGradient>
+        </GradientDefs>
 
-      <XAxis
-        tickValues={graphData.map((value) => value.x)}
-        tickFormat={(value, index, scale, tickTotal) => Math.trunc(value)}
-      />
-      <YAxis tickValues={[0,1,2,3,4,5,6,7,8,9,10]}/>
+        <XAxis
+          tickValues={graphData.map((value) => value.x)}
+          tickFormat={(value, index, scale, tickTotal) => Math.trunc(value)}
+        />
+        <YAxis tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
 
-      <AreaSeries color={'url(#CoolGradient)'} data={graphData} curve={'curveCardinal'} onNearestX={hovered} onMouseLeave={() => setCrossHairValues([])}/>
+        <AreaSeries color={'url(#CoolGradient)'} data={graphData} curve={'curveCardinal'} onNearestX={hovered} onMouseLeave={() => setCrossHairValues([])} />
 
-      <Crosshair values={crossHairValues} >
+        <Crosshair values={crossHairValues} >
 
-      </Crosshair>
+        </Crosshair>
 
-      {kaiserData.map((value, index) => {
-        if (index === selectedKaiser) {
+        {kaiserData.map((value, index) => {
+          if (index === selectedKaiserIndex) {
+            return (
+              <HorizontalRectSeries key={index} data={[value]} fill={'#2699FB'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)} />
+            )
+          }
+          let alt = { x: value.x, x0: value.x0, y: value.y - 1, y0: value.y0 - 1 }
           return (
-            <HorizontalRectSeries key={index} data={[value]} fill={'#2699FB'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)}/>
+            <HorizontalRectSeries key={index} data={[alt]} fill={'#fff0'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)} />
           )
-        }
-        let alt = {x: value.x, x0: value.x0, y: value.y - 1, y0: value.y0 - 1}
-        return (
-          <HorizontalRectSeries key={index} data={[alt]} fill={'#fff'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)}/>
-        )
-      })}
+        })}
 
-    </FlexibleWidthXYPlot>
+      </FlexibleWidthXYPlot>
     </div>
-    
+
   );
 }
 
