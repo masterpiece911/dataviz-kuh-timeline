@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Button, Toolbar, IconButton } from '@material-ui/core';
+import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -16,7 +16,15 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
+  }
 }));
+
 function App() {
 
   const classes = useStyles();
@@ -27,9 +35,14 @@ function App() {
     return ({x: value, y: Math.random() * (max - min) + min})
   })
 
-  const [graphData, setGraphData] = useState(data());
+  const [graphData, setGraphData, setLabel] = useState(data());
   const [crossHairValues, setCrossHairValues] = useState([]);
   const [selectedKaiser, setSelectedKaiser] = useState(pos_ferdinand_ii);
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current);
+  }, []);
 
   const kaiserData = kaiser.map((item) => {
     let d = {x0: parseInt(item.start.substring(0,4)), x: parseInt(item.end.substring(0,4)), y0: -1, y: -2}
@@ -43,11 +56,11 @@ function App() {
   const range = () => { return([
     kaiserData[selectedKaiser].x0 - 5,
     kaiserData[selectedKaiser].x + 5
-  ])}
+  ])}  
 
-  console.log(range());
-  
-
+  const handleChange = event => {
+    setLabel(event.target.value);
+  };
   const hovered = (value, {index}) => {
     setCrossHairValues([value])
     console.log(value.y);
@@ -72,6 +85,25 @@ function App() {
         <Button color="inherit" onClick={() => setGraphData(data)}>RELOAD</Button>
       </Toolbar>
     </AppBar>
+    <FormControl variant="outlined" className={classes.formControl}>
+    <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+          Hier
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          //value={age}
+          id="demo-simple-select-outlined"
+          onChange={handleChange}
+          labelWidth={labelWidth}
+        >
+          {kaiser.map((item) => { return (
+            <MenuItem value={item.name} >
+              {item.name}
+            </MenuItem>            
+          )
+          })}
+        </Select>
+    </FormControl>
     <Typography variant="h3">
       {'Title of Diagram'}
     </Typography>
