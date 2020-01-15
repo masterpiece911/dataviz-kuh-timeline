@@ -1,4 +1,4 @@
-export const pos_ferdinand_ii = 9;
+export const pos_ferdinand_ii = 8;
 
 export const kaiser = [
   {
