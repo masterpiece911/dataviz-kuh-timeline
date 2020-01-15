@@ -57,9 +57,6 @@ function App() {
     ])
   }
 
-  const handleChange = event => {
-    setSelectedKaiserIndex(event.target.value);
-  };
   const hovered = (value, { index }) => {
     setCrossHairValues([value])
     console.log(value.y);
@@ -92,7 +89,7 @@ function App() {
           labelId="demo-simple-select-outlined-label"
           value={selectedKaiserIndex}
           id="demo-simple-select-outlined"
-          onChange={handleChange}
+          onChange={(event) => kaiserClicked(event.target.value)}
           autoWidth
         >
           {kaiser.map((item, index) => {
