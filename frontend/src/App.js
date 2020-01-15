@@ -4,6 +4,8 @@ import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleW
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { kaiser, pos_ferdinand_ii } from './data/kaiser';
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -19,7 +21,7 @@ function App() {
 
   const classes = useStyles();
 
-  const [ start, end, min, max ] = [ 1610, 1660, 0, 10 ];
+  const [ start, end, min, max ] = [ 1415, 1780, 0, 10 ];
 
   const data = () => Array.from({length: end - start}, (v, k) => k + start).map((value) => {
     return ({x: value, y: Math.random() * (max - min) + min})
@@ -27,31 +29,34 @@ function App() {
 
   const [graphData, setGraphData] = useState(data());
   const [crossHairValues, setCrossHairValues] = useState([]);
-
-  const kaiser = [
-    {name: "MATTHIAS"      , start: 1612, end: 1619},  
-    {name: "FERDINAND II. ", start: 1619, end: 1637},
-    {name: "FERDINAND III.", start: 1637, end: 1657},
-  ]
+  const [selectedKaiser, setSelectedKaiser] = useState(pos_ferdinand_ii);
 
   const kaiserData = kaiser.map((item) => {
-    return ({x0: item.start, x: item.end, y0: -1, y: -2})
+    let d = {x0: parseInt(item.start.substring(0,4)), x: parseInt(item.end.substring(0,4)), y0: -1, y: -2}
+    
+    console.log(d);
+    
+
+    return (d)
   });
 
-  const selectedKaiser = 1;
+  const range = () => { return([
+    kaiserData[selectedKaiser].x0 - 5,
+    kaiserData[selectedKaiser].x + 5
+  ])}
 
-  const range = [
-    kaiser[1].start - 5,
-    kaiser[1].end + 5
-  ]
+  console.log(range());
+  
 
   const hovered = (value, {index}) => {
     setCrossHairValues([value])
     console.log(value.y);
     
     console.log(crossHairValues);
-    
-    
+  }
+
+  const kaiserClicked = (index) => {
+    setSelectedKaiser(index);
   }
 
   return (
@@ -71,9 +76,9 @@ function App() {
       {'Title of Diagram'}
     </Typography>
     <FlexibleWidthXYPlot
-      height={800}
-      yDomain={[-2, 10]}
-      xDomain={range}
+      height={600}
+      yDomain={[-5, 10]}
+      xDomain={range()}
       animation
       >
 
@@ -99,11 +104,12 @@ function App() {
       {kaiserData.map((value, index) => {
         if (index === selectedKaiser) {
           return (
-            <HorizontalRectSeries key={kaiser[index].name} data={[value]} fill={'#2699FB'} stroke={'#2699FB'}/>
+            <HorizontalRectSeries key={index} data={[value]} fill={'#2699FB'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)}/>
           )
         }
+        let alt = {x: value.x, x0: value.x0, y: value.y - 1, y0: value.y0 - 1}
         return (
-          <HorizontalRectSeries key={kaiser[index].name} data={[value]} fill={'#fff'} stroke={'#2699FB'} />
+          <HorizontalRectSeries key={index} data={[alt]} fill={'#fff'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)}/>
         )
       })}
 
