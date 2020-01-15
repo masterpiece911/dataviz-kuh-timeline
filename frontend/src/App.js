@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Button, Toolbar, IconButton } from '@material-ui/core';
+import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -14,7 +14,15 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
+  }
 }));
+
 function App() {
 
   const classes = useStyles();
@@ -25,8 +33,13 @@ function App() {
     return ({x: value, y: Math.random() * (max - min) + min})
   })
 
-  const [graphData, setGraphData] = useState(data());
+  const [graphData, setGraphData, setLabel] = useState(data());
   const [crossHairValues, setCrossHairValues] = useState([]);
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current);
+  }, []);
 
   const kaiser = [
     {name: "MATTHIAS"      , start: 1612, end: 1619},  
@@ -44,7 +57,9 @@ function App() {
     kaiser[1].start - 5,
     kaiser[1].end + 5
   ]
-
+  const handleChange = event => {
+    setLabel(event.target.value);
+  };
   const hovered = (value, {index}) => {
     setCrossHairValues([value])
     console.log(value.y);
@@ -67,6 +82,25 @@ function App() {
         <Button color="inherit" onClick={() => setGraphData(data)}>RELOAD</Button>
       </Toolbar>
     </AppBar>
+    <FormControl variant="outlined" className={classes.formControl}>
+    <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+          Hier
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          //value={age}
+          id="demo-simple-select-outlined"
+          onChange={handleChange}
+          labelWidth={labelWidth}
+        >
+          {kaiser.map((item) => { return (
+            <MenuItem value={item.name} >
+              {item.name}
+            </MenuItem>            
+          )
+          })}
+        </Select>
+    </FormControl>
     <Typography variant="h3">
       {'Title of Diagram'}
     </Typography>
