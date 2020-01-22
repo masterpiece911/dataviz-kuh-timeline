@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
+import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem, Grid } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,8 +17,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
+    margin: theme.spacing(1), 
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -111,39 +110,89 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ color: '#ffffff'}}>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit">
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" className={classes.title} >
             PROJECT TIMELINE
         </Typography>
-          <Button color="inherit" onClick={() => setGraphData(data)}>RELOAD</Button>
+          <Button variant="contained" color="primary"  onClick={() => setGraphData(data)} style={{ color: '#ffffff'}}>RELOAD</Button>
         </Toolbar>
       </AppBar>
-      <FormControl variant="filled" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">
-          HOFSTAAT
-        </InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          value={selectedKaiserID}
-          id="demo-simple-select-outlined"
-          onChange={(event) => kaiserClicked(event.target.value)}
-          autoWidth
-        >
-          {kaiser.map((item, index) => {
-            return (
-              <MenuItem key={item.ID} value={item.ID} >
-                {item.NAME}
-              </MenuItem>
-            )
-          })}
-        </Select>
-      </FormControl>
-      <Typography variant="h3">
-        {'Title of Diagram'}
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs>
+          <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              HOFSTAAT
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              value={selectedKaiserID}
+              id="demo-simple-select-outlined"
+              onChange={(event) => kaiserClicked(event.target.value)}
+              autoWidth
+            >
+            {kaiser.map((item) => {
+              return (
+                <MenuItem key={item.ID} value={item.ID} >
+                  {item.NAME}
+                </MenuItem>
+              )
+            })}
+          </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs>
+          <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              HERKUNFTSORTE
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              value={selectedKaiserIndex}
+              id="demo-simple-select-outlined"
+              onChange={(event) => kaiserClicked(event.target.value)}
+              autoWidth
+            >
+            {kaiser.map((item, index) => {
+              return (
+                <MenuItem key={item.ID} value={index} >
+                  {item.NAME}
+                </MenuItem>
+              )
+            })}
+          </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs>
+          <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              ORTE
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              value={selectedKaiserIndex}
+              id="demo-simple-select-outlined"
+              onChange={(event) => kaiserClicked(event.target.value)}
+              autoWidth
+            >
+            {kaiser.map((item, index) => {
+              return (
+                <MenuItem key={item.ID} value={index} >
+                  {item.NAME}
+                </MenuItem>
+              )
+            })}
+          </Select>
+          </FormControl>
+        </Grid> 
+        <Grid item xs={3}></Grid>
+        <Grid item xs alignItems="right">
+          <Button variant="contained" color="secondary" onClick={() => setGraphData(data)}>IMPORT EXT. DATA
+          </Button>
+        </Grid>
+      </Grid>
+      <Typography variant="h3" color="primary" align="center">
+        {'HÖFLINGE AUS FLORENZ'}
       </Typography>
       <FlexibleWidthXYPlot
         height={600}
