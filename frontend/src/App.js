@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem, Grid } from '@material-ui/core';
+import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot, LabelSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -123,7 +123,7 @@ function App() {
           <Button variant="contained" color="primary"  onClick={() => setGraphData(data)} style={{ color: '#ffffff'}}>RELOAD</Button>
         </Toolbar>
       </AppBar>
-      <Grid container spacing={2} alignItems="center">
+      <Grid container spacing={3} alignItems="center" style={{marginLeft:5}}>
         <Grid item xs>
           <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
             <InputLabel id="demo-simple-select-outlined-label">
@@ -190,14 +190,15 @@ function App() {
           </Select>
           </FormControl>
         </Grid> 
-        <Grid item xs={3}></Grid>
-        <Grid item xs alignItems="right">
-          <Button variant="contained" color="secondary" onClick={() => setGraphData(data)}>IMPORT EXT. DATA
+        <Grid item xs >
+          <Button variant="contained" color="secondary" onClick={() => setGraphData(data)} style={{ float:'right', marginRight: 40 }}>IMPORT EXT. DATA
           </Button>
         </Grid>
       </Grid>
-      <Typography variant="h3" color="primary" align="center">
-        {'HÖFLINGE AUS FLORENZ'}
+      <Typography color="primary" align="center">
+        <Box fontSize="h4.fontSize" fontStyle="italic" fontWeight="fontWeightLight">
+          HÖFLINGE AUS FLORENZ
+        </Box>
       </Typography>
       <FlexibleWidthXYPlot
         height={600}
