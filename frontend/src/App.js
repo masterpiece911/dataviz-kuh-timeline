@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -45,7 +45,7 @@ function App() {
   // }, []);
 
   const kaiserData = kaiser.map((item) => {
-    let d = { x0: parseInt(item.start.substring(0, 4)), x: parseInt(item.end.substring(0, 4)), y0: -1, y: -2 }
+    let d = { x0: parseInt(item.start.substring(0, 4)), x: parseInt(item.end.substring(0, 4)), y0: -1 * item.spalte, y: -1 * item.spalte - 1 }
 
     return (d)
   });
@@ -58,10 +58,8 @@ function App() {
   }
 
   const hovered = (value, { index }) => {
-    setCrossHairValues([value])
-    console.log(value.y);
-
-    console.log(crossHairValues);
+    let valueRounded = {x: value.x, y: Math.round(value.y)}
+    setCrossHairValues([valueRounded])
   }
 
   const kaiserClicked = (index) => {
@@ -109,6 +107,7 @@ function App() {
         yDomain={[-5, 10]}
         xDomain={range()}
         animation
+        onMouseLeave={() => setCrossHairValues([])}
       >
 
         <GradientDefs>
@@ -117,18 +116,20 @@ function App() {
             <stop offset="100%" stopColor="#2699FB" stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
+        {/* <Crosshair animation values={crossHairValues} /> */}
 
         <XAxis
           tickValues={graphData.map((value) => value.x)}
-          tickFormat={(value, index, scale, tickTotal) => Math.trunc(value)}
+          tickFormat={(value, index, scale, tickTotal) => {
+            if (value % 3 === 0) {
+              return Math.trunc(value);
+            } return "";
+          }}
         />
         <YAxis tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
 
-        <AreaSeries color={'url(#CoolGradient)'} data={graphData} curve={'curveCardinal'} onNearestX={hovered} onMouseLeave={() => setCrossHairValues([])} />
+        <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/>
 
-        <Crosshair values={crossHairValues} >
-
-        </Crosshair>
 
         {kaiserData.map((value, index) => {
           if (index === selectedKaiserIndex) {
@@ -136,9 +137,8 @@ function App() {
               <HorizontalRectSeries key={index} data={[value]} fill={'#2699FB'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)} />
             )
           }
-          let alt = { x: value.x, x0: value.x0, y: value.y - 1, y0: value.y0 - 1 }
           return (
-            <HorizontalRectSeries key={index} data={[alt]} fill={'#fff0'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)} />
+            <HorizontalRectSeries key={index} data={[value]} fill={'#fff0'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(index)} />
           )
         })}
 
