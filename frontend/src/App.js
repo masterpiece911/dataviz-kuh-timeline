@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem, Grid } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot, LabelSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -82,7 +82,8 @@ function App() {
           x0: kaiser.end,
           y: column * -1,
           y0: (column * -1) - 1,
-          id: kaiser.id
+          id: kaiser.id,
+          name: kaiser.name,
         };
         console.log(kaiserObj);
         
@@ -97,6 +98,10 @@ function App() {
   const minimum = () => {
     const [min, max] = range();
     return -1 * getMaxColumnInRange(min, max) - 1;
+  }
+
+  const maximum = () => {
+    return 10
   }
 
   const hovered = (value, { index }) => {
@@ -196,7 +201,7 @@ function App() {
       </Typography>
       <FlexibleWidthXYPlot
         height={600}
-        yDomain={[minimum(), 10]}
+        yDomain={[minimum(), maximum()]}
         xDomain={range()}
         animation
         onMouseLeave={() => setCrossHairValues([])}
@@ -205,12 +210,15 @@ function App() {
         <GradientDefs>
           <linearGradient id="CoolGradient" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor="#2699FB" stopOpacity={0.8} />
-            <stop offset="100%" stopColor="#2699FB" stopOpacity={0.0} />
+            <stop offset={((maximum() + 0.5) / (maximum() - minimum()) * 100) + "%"} stopColor="#2699FB" stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
         {/* <Crosshair animation values={crossHairValues} /> */}
 
         <XAxis
+          style={{
+            text: {stroke: 'none', fill: '000', fontWeight: 'bold'}
+          }}
           tickValues={graphData.map((value) => value.x)}
           tickFormat={(value, index, scale, tickTotal) => {
             if (value % 3 === 0) {
@@ -222,11 +230,8 @@ function App() {
 
         <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/>
 
-        <HorizontalRectSeries>
-          data={{x0:1415, x:1780, y0:0, y:6}} fill={'#fff'} stroke={'#fff'}
-        </HorizontalRectSeries>
-
-
+        <HorizontalRectSeries data={[{x0:1415, x:1780, y0:-0.5, y:minimum()}]} fill={'#ffffff'} stroke={'#ffffff'}/>
+          
         {kaiserData.map((value) => {
           if (value.id === selectedKaiserID) {
             return (
@@ -234,9 +239,19 @@ function App() {
             )
           }
           return (
-            <HorizontalRectSeries key={value.id} data={[value]} fill={'#fff'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(value.id)} />
+            <HorizontalRectSeries key={value.id} data={[value]} fill={'#2699FB44'} stroke={'#2699FB'} onSeriesClick={() => kaiserClicked(value.id)} />
           )
         })}
+
+        <LabelSeries 
+          animation
+          data={kaiserData.map((k) => {return(
+            {x: (k.x + k.x0) / 2, y: (k.y + k.y0) / 2 - 1, label: k.name}
+            )})}
+          style={{fill: 'white', fontWeight: 'bold'}}
+          labelAnchorX="middle" labelAnchorY="middle"
+
+        />
 
       </FlexibleWidthXYPlot>
     </div>

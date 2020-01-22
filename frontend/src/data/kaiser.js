@@ -165,7 +165,7 @@ const getRange = (start, end) => {
 const data = kaiser.map((k) => {
     let s = parseInt(k.start.substring(0, 4));
     let e = parseInt(k.end.substring(0, 4));
-    return ({ id: k.ID, start: s, end: e }
+    return ({ id: k.ID, name: k.NAME, start: s, end: e }
     )
 })
 
