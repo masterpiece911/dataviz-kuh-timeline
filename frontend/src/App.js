@@ -148,14 +148,14 @@ function App() {
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              value={selectedKaiserIndex}
+              value={selectedKaiserID}
               id="demo-simple-select-outlined"
               onChange={(event) => kaiserClicked(event.target.value)}
               autoWidth
             >
-            {kaiser.map((item, index) => {
+            {kaiser.map((item) => {
               return (
-                <MenuItem key={item.ID} value={index} >
+                <MenuItem key={item.ID} value={item.ID} >
                   {item.NAME}
                 </MenuItem>
               )
@@ -170,14 +170,14 @@ function App() {
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              value={selectedKaiserIndex}
+              value={selectedKaiserID}
               id="demo-simple-select-outlined"
               onChange={(event) => kaiserClicked(event.target.value)}
               autoWidth
             >
-            {kaiser.map((item, index) => {
+            {kaiser.map((item) => {
               return (
-                <MenuItem key={item.ID} value={index} >
+                <MenuItem key={item.ID} value={item.ID} >
                   {item.NAME}
                 </MenuItem>
               )
