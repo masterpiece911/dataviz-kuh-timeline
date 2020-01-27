@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, Button, Toolbar, IconButton, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, XYPlot, LabelSeries } from 'react-vis';
+import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import '../node_modules/react-vis/dist/style.css';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
 
@@ -214,7 +214,7 @@ function App() {
             <stop offset={((maximum() + 0.5) / (maximum() - minimum()) * 100) + "%"} stopColor="#2699FB" stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
-        {/* <Crosshair animation values={crossHairValues} /> */}
+        <Crosshair animation values={crossHairValues} />
 
         <XAxis
           style={{
