@@ -2,32 +2,42 @@ import personen from './data/personen'
 import orte from './data/orte'
 
 export function checkForOrt(category, place) {
-    if (category === "Sterbeort") {
+    if (category === "gestorben") {
         checkForSOrt(place)
     }
-    if (category === "Geburtsort") {
+    if (category === "geboren") {
         checkForGOrt(place)
     }
 }
 
 export function checkCategory(category, court) {
-    if (category === "Bevoelkerung") {
+    if (category === "Bevölkerung") {
         checkForKaiser(court);
     }
-    if (category === "Alter") {
+    if (category === "Durschnittsalter") {
         checkForKaiser(court)
     }
-    if (category === "Geburten") {
-        checkForBornUnder(year, kaiserid)
+    if (category === "Anzahl der Geburten") {
+        bornIn(category)
     }
-    if (category === "Tode") {
-        checkForDeathsUnder(year, kaiserid)
+    if (category === "Anzahl der Tode") {
+        bornIn(category)
     }
 
 }
 
 function checkForGOrt(place) {
     let filtered = personen.filter(person => (person.Geburtsort === place))
+    return filtered;
+}
+
+function checkBorn(place) {
+    let filtered = personen.filter(person => (person.Geburtsdatum === place))
+    return filtered;
+}
+
+function checkDeath(place) {
+    let filtered = personen.filter(person => (person.Todesdatum === place))
     return filtered;
 }
 
@@ -100,4 +110,19 @@ function checkForDeathsUnder(year, kaiserid) {
     let filtered = personen.filter(person => ((person.Geburtsdatum <= year) && (person.Todesdatum <= year)))
         .filter(person => (person.HofherrID === kaiserid))
     return filtered;
+}
+
+function bornIn(category) {
+    var geburtsjahre = new Map();
+    var todesjahre = new Map();
+    for (let i = 1415; i <= 1780; i++) {
+        geburtsjahre.set(i, checkBorn(i))
+        todesjahre.set(i, checkDeath(i))
+    }
+    if (category === "Anzahl der Geburten") {
+        return geburtsjahre
+    }
+    if (category === "Anzahl der Tode") {
+        return todesjahre
+    }
 }
