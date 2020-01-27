@@ -240,7 +240,16 @@ function App() {
             <stop offset={((graphData.max + 0.5) / (graphData.max - minimum()) * 100) + "%"} stopColor="#2699FB" stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
-        <Crosshair animation values={crossHairValues} />
+        <Crosshair values={crossHairValues}>
+        {crossHairValues.map((item) => {return(
+                <div style={{borderRadius:4, color:'white', background: '#3e5da1', width:80, height: 80, padding: 6}}>
+                  <h3>Jahr: {item.x}</h3>
+                  <h3>Anzahl: {item.y}</h3>
+                </div>
+                )
+            })
+        }
+        </Crosshair>
 
         <XAxis
           on0
