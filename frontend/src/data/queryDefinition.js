@@ -6,28 +6,34 @@ export const queries = (setParamOne, setParamTwo) => [
       {
         name: `Kategorie`,
         listOfItems: [
-          "Bevoelkerung",
-          "Alter",
-          "Geburten",
-          "Tode",
-          "Herkunftsort",
-          "Amt"
+          "Bevölkerung",
+          "Durschnittsalter",
+          "Anzahal geburten",
+          "Anzahl der Tode",
+          "Herkunftsort der Höflinge",
+          "Anzahl der Ämter"
         ],
         initialValue: 'Bevoelkerung',
         setter: (value) => {setParamOne(value)} // TODO CHANGE FUNCTION
+      },
+      {
+        name: 'Hofstaat', 
+        listOfItems: kaiser,
+        initialValue: 'Kaiser',
+        setter: (value) => {setParamTwo(value)}
       }
     ],
-    title: (category) => {}, // TODO TITLE FUNCTION
+    title: (category, court) => `${category} im Hofstaat von Kaiser ${court}`, // TODO TITLE FUNCTION
     data: () => {},// TODO DATA FUNCTION
-    name: `Demographie` // TODO NAME
+    name: `Demographie`, // TODO NAME
   },
   {
     params: [
       {
         name: `Kategorie`,
         listOfItems: [
-          "Sterbeort",
-          "Herkunftsort"
+          "gestorben",
+          "geboren"
         ],
         initialValue: 'Herkunftsort',
         setter: (value) => {setParamOne(value)}//TODO CHANGE FUNCTION
@@ -41,7 +47,7 @@ export const queries = (setParamOne, setParamTwo) => [
         setter: (value) => {setParamTwo(value)}//TODO CHANGE FUNCTION
       },
     ],
-    title: (category, place) => {}, // TODO TITLE FUNCTION
+    title: (category, place) => `Höflinge $(category) in $(place)`, // TODO TITLE FUNCTION
     data: () => {}, // TODO DATA FUNCTION
     name: `Geographie`
   },
@@ -61,7 +67,7 @@ export const queries = (setParamOne, setParamTwo) => [
         setter: (value) => {setParamTwo(value)}
       }
     ],
-    title: (office, court) => {},
+    title: (office, court) => `$(office) im Hofstaat von $(court)`,
     data: () => {},
     name: `Amt`
   }
