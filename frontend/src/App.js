@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo} from 'react';
 import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,7 +6,6 @@ import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
-import { personen } from './data/personen';
 import { queries as queryDefinitions } from './data/queryDefinition';
 
 const useStyles = makeStyles(theme => ({
@@ -31,29 +30,50 @@ function App() {
 
   const classes = useStyles();
 
-  const [start, end, min, max] = [1415, 1780, 0, 10];
+  const [start, end] = [1503, 1705];
 
   const {height} = useWindowSize();
 
-  const data = () => Array.from({ length: end - start }, (v, k) => k + start).map((value) => {
-    return ({ x: value, y: Math.random() * (max - min) + min })
-  })
-
-  const [graphData, setGraphData] = useState(data());
   const [crossHairValues, setCrossHairValues] = useState([]);
   const [selectedKaiserID, setSelectedKaiserID] = useState(initialKaiser);
 
-  const [paramOne, setParamOne] = useState(undefined);
-  const [paramTwo, setParamTwo] = useState(undefined);
+  const [paramOne, setParamOne] = useState(null);
+  const [paramTwo, setParamTwo] = useState(null);
   
   const queries = queryDefinitions(setParamOne, setParamTwo);
-  const [selectedQueryIndex, setSelectedQueryIndex] = useState(0); // TODO INITIAL STATE ON ALL OF THESE IS MISSING!!
+  const [selectedQueryIndex, setSelectedQueryIndex] = useState(0);
 
   useEffect(() => {
+    
     queries[selectedQueryIndex].params.forEach(({setter, initialValue}) => {
       setter(initialValue);
     });
-  }, [selectedQueryIndex, queries]);
+  }, []);
+  
+  if(!paramOne || !paramTwo) {
+    setParamOne(queries[selectedQueryIndex].params[0].initialValue);
+    setParamTwo(queries[selectedQueryIndex].params[1].initialValue);
+  }
+
+  const graphData = useMemo(
+    () => {
+      console.log(`calculated graph data.`);
+
+      if(!paramOne || !paramTwo){
+        return null;
+      }
+      
+      const result = queries[selectedQueryIndex].data(paramOne, paramTwo);
+      console.log(result);
+      return result;
+      
+    },
+    [paramOne, paramTwo, selectedQueryIndex, queries]
+  )
+
+  console.log(graphData);
+  
+
 
   const range = () => {
     const selectedKaiser = kaiser.find(kaiser => {
@@ -62,12 +82,12 @@ function App() {
     let min = parseInt(selectedKaiser.start.substring(0, 4));
     let max = parseInt(selectedKaiser.end.substring(0, 4));
     
-    if (min <= 1420){
-      return [1415, max+5]
+    if (min <= start + 5){
+      return [start, max+5]
     }
 
-    if (max >= 1775) {
-      return [min - 5, 1780]
+    if (max >= end - 5) {
+      return [min - 5, end]
     }
 
     return [min -5, max + 5]
@@ -102,10 +122,6 @@ function App() {
     return -1 * getMaxColumnInRange(min, max) - 1;
   }
 
-  const maximum = () => {
-    return 10
-  }
-
   const hovered = (value, { index }) => {
     let valueRounded = {x: value.x, y: Math.round(value.y)}
     setCrossHairValues([valueRounded])
@@ -115,13 +131,24 @@ function App() {
     setSelectedKaiserID(id);
   }
 
-  const paramForIndex = (index) => {
-    switch (index){
-      case 0: return paramOne;
-      case 1: return paramTwo;
-      default: return undefined;
+  const makeTitle = () => {
+
+    if (!paramOne || !paramTwo) {
+      return ('Select all parameters');
     }
+    
+    const firstParamField = queries[selectedQueryIndex].params[0].field;
+    const secondParamField = queries[selectedQueryIndex].params[1].field;
+    const first = firstParamField ? paramOne[firstParamField] : paramOne;
+    const second = secondParamField ? paramTwo[secondParamField] : paramTwo;
+
+    return queries[selectedQueryIndex].title(first, second);
   }
+
+  if(!paramOne || !paramTwo) {
+    return null;
+  }
+
 
   return (
     <div className={classes.root}>
@@ -130,7 +157,6 @@ function App() {
           <Typography variant="h6" className={classes.title} >
             PROJECT TIMELINE
         </Typography>
-          <Button variant="contained" color="primary"  onClick={() => setGraphData(data)} style={{ color: '#ffffff'}}>RELOAD</Button>
         </Toolbar>
       </AppBar>
       <Grid container spacing={3} alignItems="center" style={{marginLeft:5}}>
@@ -143,7 +169,11 @@ function App() {
               labelId="demo-simple-select-outlined-label"
               value={selectedQueryIndex}
               id="demo-simple-select-outlined"
-              onChange={(event) => setSelectedQueryIndex(event.target.value)}
+              onChange={(event) =>{
+                setSelectedQueryIndex(event.target.value);
+                setParamOne(queries[event.target.value].params[0].initialValue);
+                setParamTwo(queries[event.target.value].params[1].initialValue);
+                }}
               autoWidth
             >
             {queries.map((item, index) => {
@@ -164,7 +194,7 @@ function App() {
               </InputLabel>
               <Select
                 labelId={`param${index}-input-label`}
-                value={paramForIndex(index)}
+                value={index === 0 ? paramOne : paramTwo}
                 onChange={(event) => param.setter(event.target.value)}
                 autoWidth
               >
@@ -187,18 +217,18 @@ function App() {
           </Grid>
         )})}
         <Grid item xs >
-          <Button variant="contained" color="secondary" onClick={() => setGraphData(data)} style={{ float:'right', marginRight: 40 }}>IMPORT EXT. DATA
+          <Button variant="contained" color="secondary" style={{ float:'right', marginRight: 40 }}>IMPORT EXT. DATA
           </Button>
         </Grid>
       </Grid>
       <Typography color="primary" align="center">
         <Box fontSize="h4.fontSize" fontStyle="italic" fontWeight="fontWeightLight">
-          HÖFLINGE AUS FLORENZ
+          {makeTitle()}
         </Box>
       </Typography>
       <FlexibleWidthXYPlot
         height={height-200}
-        yDomain={[minimum(), maximum()]}
+        yDomain={[minimum(), graphData.max]}
         xDomain={range()}
         animation={true}
         onMouseLeave={() => setCrossHairValues([])}
@@ -207,7 +237,7 @@ function App() {
         <GradientDefs>
           <linearGradient id="CoolGradient" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor="#2699FB" stopOpacity={0.8} />
-            <stop offset={((maximum() + 0.5) / (maximum() - minimum()) * 100) + "%"} stopColor="#2699FB" stopOpacity={0.0} />
+            <stop offset={((graphData.max + 0.5) / (graphData.max - minimum()) * 100) + "%"} stopColor="#2699FB" stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
         <Crosshair animation values={crossHairValues} />
@@ -218,7 +248,6 @@ function App() {
             text: {stroke: 'none', fill: '000', fontWeight: 'bold'}
           }}
           hideLine tickSize={0}
-          tickValues={graphData.map((value) => value.x)}
           tickFormat={(value, index, scale, tickTotal) => {
             if (value % 3 === 0) {
               return Math.trunc(value);
@@ -226,11 +255,15 @@ function App() {
           }}
         />
         <YAxis 
-          tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} 
+          tickFormat={(value, index, scale, tickTotal) => {
+            if (value >= 0) {
+              return Math.trunc(value);
+            } else return "";
+          }}
           hideLine tickSize={0}
         />
 
-        <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/>
+        <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData.graph} curve={'curveBasis'} onNearestX={hovered}/>
         {/* {console.log(personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])}))}
         <LineMarkSeries
         curve={'curveMonotoneX'}
@@ -239,7 +272,7 @@ function App() {
           }
       /> */}
 
-        <HorizontalRectSeries data={[{x0:1415, x:1780, y0:-0.5, y:minimum()}]} fill={'#ffffff'} stroke={'#ffffff'}/>
+        <HorizontalRectSeries data={[{x0:{start}, x:{end}, y0:-0.5, y:minimum()}]} fill={'#ffffff'} stroke={'#ffffff'}/>
           
         {kaiserData.map((value) => {
           if (value.id === selectedKaiserID) {
