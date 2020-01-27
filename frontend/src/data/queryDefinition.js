@@ -1,4 +1,6 @@
-import {kaiser} from './kaiser';
+import { kaiser } from './kaiser';
+import { checkCaegory } from './data/query';
+import { checkForOrt, checkForAmt } from './query';
 
 export const queries = (setParamOne, setParamTwo) => [
   {
@@ -24,7 +26,7 @@ export const queries = (setParamOne, setParamTwo) => [
       }
     ],
     title: (category, court) => `${category} im Hofstaat von Kaiser ${court}`, // TODO TITLE FUNCTION
-    data: () => {},// TODO DATA FUNCTION
+    data: (category, court) => { checkCaegory(category, court) }, // TODO DATA FUNCTION
     name: `Demographie`, // TODO NAME
   },
   {
@@ -48,7 +50,7 @@ export const queries = (setParamOne, setParamTwo) => [
       },
     ],
     title: (category, place) => `Höflinge $(category) in $(place)`, // TODO TITLE FUNCTION
-    data: () => {}, // TODO DATA FUNCTION
+    data: (category, place) => { checkForOrt(category, place) }, // TODO DATA FUNCTION
     name: `Geographie`
   },
   {
@@ -68,7 +70,7 @@ export const queries = (setParamOne, setParamTwo) => [
       }
     ],
     title: (office, court) => `$(office) im Hofstaat von $(court)`,
-    data: () => {},
+    data: (office, court) => { checkForAmt(office, court) },
     name: `Amt`
   }
 ]
