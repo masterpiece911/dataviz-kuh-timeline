@@ -1,26 +1,6 @@
 export const initialKaiser = 'F2';
 
-export const kaiser = [{
-    "ID": "FR",
-    "NAME": "Friedrich\u00a0III.",
-    "start": "1415 Sep 21",
-    "end": "1493 Aug 19",
-    "spalte": "0"
-},
-{
-    "ID": "M1",
-    "NAME": "Maximilian\u00a0I.",
-    "start": "1459 Mar 22",
-    "end": "1519 Jan 12",
-    "spalte": "1"
-},
-{
-    "ID": "C5",
-    "NAME": "Karl\u00a0V.",
-    "start": "1500 Feb 24",
-    "end": "1558 Sep 21",
-    "spalte": "2"
-},
+export const kaiser = [
 {
     "ID": "F1",
     "NAME": "Ferdinand\u00a0I.",
@@ -43,13 +23,6 @@ export const kaiser = [{
     "spalte": "0"
 },
 {
-    "ID": "ES",
-    "NAME": "Ernst",
-    "start": "1553 Jun 15",
-    "end": "1595 Feb 20",
-    "spalte": "2"
-},
-{
     "ID": "MS",
     "NAME": "Matthias",
     "start": "1557 Feb 24",
@@ -64,46 +37,11 @@ export const kaiser = [{
     "spalte": "4"
 },
 {
-    "ID": "E2",
-    "NAME": "Eleonora\u00a0II.",
-    "start": "1598 Sep 23",
-    "end": "1655 Jun 27",
-    "spalte": "3"
-},
-{
-    "ID": "JC",
-    "NAME": "Johann Karl",
-    "start": "1605 Nov 01",
-    "end": "1619 Dez 26",
-    "spalte": "4"
-},
-{
     "ID": "F3",
     "NAME": "Ferdinand\u00a0III.",
     "start": "1608 Jul 13",
     "end": "1657 Apr 02",
     "spalte": "0"
-},
-{
-    "ID": "LW",
-    "NAME": "Leopold Wilhelm",
-    "start": "1614 Jan 05",
-    "end": "1662 Nov 20",
-    "spalte": "1"
-},
-{
-    "ID": "A3",
-    "NAME": "Anna",
-    "start": "1616 Jul 21",
-    "end": "1676 Sep 11",
-    "spalte": "3"
-},
-{
-    "ID": "E3",
-    "NAME": "Eleonora\u00a0III.",
-    "start": "1630 Nov 18",
-    "end": "1686 Dez 06",
-    "spalte": "4"
 },
 {
     "ID": "F4",
@@ -119,42 +57,6 @@ export const kaiser = [{
     "end": "1705 Mai 05",
     "spalte": "0"
 },
-{
-    "ID": "CF",
-    "NAME": "Klaudia Felizitas",
-    "start": "1653 Mai 30",
-    "end": "1676 Apr 08",
-    "spalte": "5"
-},
-{
-    "ID": "MAT",
-    "NAME": "Antonia",
-    "start": "1669 Jan 18",
-    "end": "1692 Dez 24",
-    "spalte": "1"
-},
-{
-    "ID": "J1",
-    "NAME": "Joseph\u00a0I.",
-    "start": "1678 Jul 26",
-    "end": "1711 Apr 17",
-    "spalte": "3"
-},
-
-{
-    "ID": "C6",
-    "NAME": "Karl\u00a0VI.",
-    "start": "1685 Okt 01",
-    "end": "1740 Okt 20",
-    "spalte": "2"
-},
-{
-    "ID": "MT",
-    "NAME": "Maria Theresia",
-    "start": "1717 Mai 13",
-    "end": "1780 Nov 29",
-    "spalte": "0"
-}
 ]
 
 const getRange = (start, end) => {
@@ -175,7 +77,7 @@ const between = (val, min, max) => {
 let columnPerYear = {}
 let kaisersPerYear = {}
 
-for (const year of getRange(1415, 1780)) {
+for (const year of getRange(1503, 1705)) {
     let count = data
         .map((value) => {
             const isInYear = between(year, value.start, value.end);
@@ -191,9 +93,6 @@ for (const year of getRange(1415, 1780)) {
 
     columnPerYear[year] = count;
 }
-
-console.log(kaisersPerYear);
-
 
 const uniqueKaisersInRange = (min, max) => {
     let kaisers = [];
