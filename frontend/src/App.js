@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,6 +7,7 @@ import useWindowSize from 'react-use/lib/useWindowSize';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
 import { personen } from './data/personen';
+import { queries as queryDefinitions } from './data/queryDefinition';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,18 +43,17 @@ function App() {
   const [crossHairValues, setCrossHairValues] = useState([]);
   const [selectedKaiserID, setSelectedKaiserID] = useState(initialKaiser);
 
-  // const kaiserData = kaiser.map((item) => {
-  //   let d = { x0: parseInt(item.start.substring(0, 4)), x: parseInt(item.end.substring(0, 4)), y0: -1 * item.spalte, y: -1 * item.spalte - 1 }
+  const [paramOne, setParamOne] = useState(undefined);
+  const [paramTwo, setParamTwo] = useState(undefined);
+  
+  const [queries, setQueries] = useState(queryDefinitions(setParamOne, setParamTwo));
+  const [selectedQuery, setSelectedQuery] = useState(queries[0]); // TODO INITIAL STATE ON ALL OF THESE IS MISSING!!
 
-  //   return (d)
-  // });
-
-  // const range = () => {
-  //   return ([
-  //     kaiserData[selectedKaiserIndex].x0 - 5,
-  //     kaiserData[selectedKaiserIndex].x + 5
-  //   ])
-  // }
+  useEffect(() => {
+    selectedQuery.params.forEach(({setter, initialValue}) => {
+      setter(initialValue);
+    });
+  }, selectedQuery, selectedQuery.params);
 
   const range = () => {
     const selectedKaiser = kaiser.find(kaiser => {
@@ -206,7 +206,7 @@ function App() {
         height={height-200}
         yDomain={[minimum(), maximum()]}
         xDomain={range()}
-        animation
+        animation={true}
         onMouseLeave={() => setCrossHairValues([])}
       >
 
@@ -219,9 +219,11 @@ function App() {
         <Crosshair animation values={crossHairValues} />
 
         <XAxis
+          on0
           style={{
             text: {stroke: 'none', fill: '000', fontWeight: 'bold'}
           }}
+          hideLine tickSize={0}
           tickValues={graphData.map((value) => value.x)}
           tickFormat={(value, index, scale, tickTotal) => {
             if (value % 3 === 0) {
@@ -229,16 +231,19 @@ function App() {
             } return "";
           }}
         />
-        <YAxis tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+        <YAxis 
+          tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} 
+          hideLine tickSize={0}
+        />
 
-        {/* <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/> */}
+        <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/>
+        {/* {console.log(personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])}))}
         <LineMarkSeries
-        className="linemark-series-example-2"
         curve={'curveMonotoneX'}
         data={
-          personen.map((value, idx) => [{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}] )
+          personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])})
           }
-      />
+      /> */}
 
         <HorizontalRectSeries data={[{x0:1415, x:1780, y0:-0.5, y:minimum()}]} fill={'#ffffff'} stroke={'#ffffff'}/>
           
@@ -254,7 +259,6 @@ function App() {
         })}
 
         <LabelSeries 
-          animation
           data={kaiserData.map((k) => {return(
             {x: (k.x + k.x0) / 2, y: (k.y + k.y0) / 2 - 1, label: k.name}
             )})}
