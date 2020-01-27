@@ -1,5 +1,4 @@
-import personen from './data/personen'
-import orte from './data/orte'
+import { personen } from './personen'
 
 export function checkForOrt(category, place) {
     if (category === "gestorben") {
