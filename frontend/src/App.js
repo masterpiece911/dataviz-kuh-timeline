@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
+import { personen } from './data/personen';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -232,7 +233,14 @@ function App() {
         />
         <YAxis tickValues={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
 
-        <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/>
+        {/* <AreaSeries fill={'url(#CoolGradient)'} stroke={'#0000'} data={graphData} curve={'curveCardinal'} onNearestX={hovered}/> */}
+        <LineMarkSeries
+        className="linemark-series-example-2"
+        curve={'curveMonotoneX'}
+        data={
+          personen.map((value, idx) => [{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}] )
+          }
+      />
 
         <HorizontalRectSeries data={[{x0:1415, x:1780, y0:-0.5, y:minimum()}]} fill={'#ffffff'} stroke={'#ffffff'}/>
           
