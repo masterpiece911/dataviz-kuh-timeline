@@ -79,7 +79,6 @@ function App() {
     let positions = getPositionOfKaisersInRange(min, max, selectedKaiserID);
     let data = [];
     for (const column of Object.keys(positions)) {
-      console.log(column);
       for (const kaiser of positions[column]) {
         const kaiserObj = {
           x: kaiser.start,
@@ -89,7 +88,6 @@ function App() {
           id: kaiser.id,
           name: kaiser.name,
         };
-        console.log(kaiserObj);
         
         data.push(kaiserObj);
       }
