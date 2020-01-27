@@ -158,7 +158,6 @@ export const kaiser = [{
 ]
 
 const getRange = (start, end) => {
-    let list = [];
     return Array(end - start + 1).fill().map((_, idx) => start + idx)
 }
 
@@ -228,15 +227,12 @@ export const getPositionOfKaisersInRange = (min, max, selected=null) => {
     for (const col of getRange(0, maxColumns)) {
         columns[col] = [];
     }
-    let added = false;
 
     for (const kaiser of kaisers) {
         let selectedKaiser = selected ? kaiser.id === selected : false
-        added = false;
         for (const col of getRange(0, maxColumns)) {
             if (columns[col].length === 0) {
                 columns[col].push(kaiser)
-                added = true;
                 if (selectedKaiser) {
                     selectedColumn = col;
                 }
@@ -248,7 +244,6 @@ export const getPositionOfKaisersInRange = (min, max, selected=null) => {
             if (columns[col][length - 1].end <= kaiser.start) {
 
                 columns[col].push(kaiser)
-                added = true;
                 if (selectedKaiser) {
                     selectedColumn = col;
                 }
@@ -256,7 +251,7 @@ export const getPositionOfKaisersInRange = (min, max, selected=null) => {
             }
         }
     }
-    if (selectedColumn && selectedColumn != 0) {
+    if (selectedColumn && selectedColumn !== 0) {
         let zero = columns[0];
         let sel = columns[selectedColumn]
         columns[0] = sel;
