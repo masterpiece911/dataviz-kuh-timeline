@@ -1,6 +1,7 @@
 import { kaiser } from './kaiser';
-import { checkCaegory } from './data/query';
-import { checkForOrt, checkForAmt } from './query';
+import { Orte as orte } from './orte';
+import { aemter } from './amt';
+import { checkForOrt, checkForAmt, checkCategory as checkCaegory } from './query';
 
 export const queries = (setParamOne, setParamTwo) => [{
         params: [{
@@ -14,18 +15,19 @@ export const queries = (setParamOne, setParamTwo) => [{
                     "Anzahl der Ämter"
                 ],
                 initialValue: 'Bevölkerung',
-                setter: (value) => { setParamOne(value) } // TODO CHANGE FUNCTION
+                setter: (value) => { setParamOne(value) }
             },
             {
                 name: 'Hofstaat',
                 listOfItems: kaiser,
-                initialValue: 'Kaiser',
+                field: 'NAME',
+                initialValue: kaiser[0],
                 setter: (value) => { setParamTwo(value) }
             }
         ],
-        title: (category, court) => `${category} im Hofstaat von Kaiser ${court}`, // TODO TITLE FUNCTION
-        data: (category, court) => { checkCaegory(category, court) }, // TODO DATA FUNCTION
-        name: `Demographie`, // TODO NAME
+        title: (category, court) => `${category} im Hofstaat von Kaiser ${court}`,
+        data: (category, court) => { checkCaegory(category, court) }, 
+        name: `Demographie`,
     },
     {
         params: [{
@@ -34,34 +36,34 @@ export const queries = (setParamOne, setParamTwo) => [{
                     "gestorben",
                     "geboren"
                 ],
-                initialValue: 'Herkunftsort',
-                setter: (value) => { setParamOne(value) } //TODO CHANGE FUNCTION
+                initialValue: 'gestorben',
+                setter: (value) => { setParamOne(value) }
             },
             {
                 name: `Ort`,
-                listOfItems: [
-                    // TODO LISTE AN ORTEN
-                ],
-                initialValue: '',
-                setter: (value) => { setParamTwo(value) } //TODO CHANGE FUNCTION
+                listOfItems: orte,
+                field: 'Ort',
+                initialValue: orte[1],
+                setter: (value) => { setParamTwo(value) }
             },
         ],
-        title: (category, place) => `Höflinge $(category) in $(place)`, // TODO TITLE FUNCTION
-        data: (category, place) => { checkForOrt(category, place) }, // TODO DATA FUNCTION
+        title: (category, place) => `Höflinge $(category) in $(place)`,
+        data: (category, place) => { checkForOrt(category, place) },
         name: `Geographie`
     },
     {
         params: [{
                 name: `Amt`,
-                listOfItems: [
-                    // TODO LISTE AN AEMTERN
-                ],
-                initialValue: '',
-                setter: (value) => { setParamOne(value) } // TODO CHANGE FUNCTION
+                listOfItems: aemter,
+                field: 'Hofamt',
+                initialValue: aemter[3],
+                setter: (value) => { setParamOne(value) }
             },
             {
                 name: `Hofstaat`,
                 listOfItems: kaiser,
+                field: 'NAME',
+                initialValue: kaiser[0],
                 setter: (value) => { setParamTwo(value) }
             }
         ],

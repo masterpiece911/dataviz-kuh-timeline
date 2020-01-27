@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
@@ -46,14 +46,14 @@ function App() {
   const [paramOne, setParamOne] = useState(undefined);
   const [paramTwo, setParamTwo] = useState(undefined);
   
-  const [queries, setQueries] = useState(queryDefinitions(setParamOne, setParamTwo));
-  const [selectedQuery, setSelectedQuery] = useState(queries[0]); // TODO INITIAL STATE ON ALL OF THESE IS MISSING!!
+  const queries = queryDefinitions(setParamOne, setParamTwo);
+  const [selectedQueryIndex, setSelectedQueryIndex] = useState(0); // TODO INITIAL STATE ON ALL OF THESE IS MISSING!!
 
   useEffect(() => {
-    selectedQuery.params.forEach(({setter, initialValue}) => {
+    queries[selectedQueryIndex].params.forEach(({setter, initialValue}) => {
       setter(initialValue);
     });
-  }, selectedQuery, selectedQuery.params);
+  }, [selectedQueryIndex, queries]);
 
   const range = () => {
     const selectedKaiser = kaiser.find(kaiser => {
@@ -115,6 +115,14 @@ function App() {
     setSelectedKaiserID(id);
   }
 
+  const paramForIndex = (index) => {
+    switch (index){
+      case 0: return paramOne;
+      case 1: return paramTwo;
+      default: return undefined;
+    }
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{ color: '#ffffff'}}>
@@ -128,70 +136,56 @@ function App() {
       <Grid container spacing={3} alignItems="center" style={{marginLeft:5}}>
         <Grid item xs>
           <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">
-              HOFSTAAT
+            <InputLabel>
+              Anfrage
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              value={selectedKaiserID}
+              value={selectedQueryIndex}
               id="demo-simple-select-outlined"
-              onChange={(event) => kaiserClicked(event.target.value)}
+              onChange={(event) => setSelectedQueryIndex(event.target.value)}
               autoWidth
             >
-            {kaiser.map((item) => {
+            {queries.map((item, index) => {
               return (
-                <MenuItem key={item.ID} value={item.ID} >
-                  {item.NAME}
+                <MenuItem key={item.name} value={index} >
+                  {item.name}
                 </MenuItem>
               )
             })}
           </Select>
           </FormControl>
         </Grid>
-        <Grid item xs>
-          <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">
-              HERKUNFTSORTE
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              value={selectedKaiserID}
-              id="demo-simple-select-outlined"
-              onChange={(event) => kaiserClicked(event.target.value)}
-              autoWidth
-            >
-            {kaiser.map((item) => {
-              return (
-                <MenuItem key={item.ID} value={item.ID} >
-                  {item.NAME}
-                </MenuItem>
-              )
-            })}
-          </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs>
-          <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">
-              ORTE
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              value={selectedKaiserID}
-              id="demo-simple-select-outlined"
-              onChange={(event) => kaiserClicked(event.target.value)}
-              autoWidth
-            >
-            {kaiser.map((item) => {
-              return (
-                <MenuItem key={item.ID} value={item.ID} >
-                  {item.NAME}
-                </MenuItem>
-              )
-            })}
-          </Select>
-          </FormControl>
-        </Grid> 
+        {queries[selectedQueryIndex].params.map((param, index) => {return(
+          <Grid key={param.name} item xs >
+            <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
+              <InputLabel id={`param${index}-input-label`}>
+                {param.name}
+              </InputLabel>
+              <Select
+                labelId={`param${index}-input-label`}
+                value={paramForIndex(index)}
+                onChange={(event) => param.setter(event.target.value)}
+                autoWidth
+              >
+                {param.listOfItems.map((item) => {
+                  if(param.field) {
+                    return(
+                      <MenuItem key={item[param.field]} value={item}>
+                        {item[param.field]}
+                      </MenuItem>
+                    )
+                  }
+                  return (
+                    <MenuItem key={item} value={item} >
+                      {item}
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+        )})}
         <Grid item xs >
           <Button variant="contained" color="secondary" onClick={() => setGraphData(data)} style={{ float:'right', marginRight: 40 }}>IMPORT EXT. DATA
           </Button>
