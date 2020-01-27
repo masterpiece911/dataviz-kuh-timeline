@@ -3,6 +3,7 @@ import { Typography, AppBar, Button, Toolbar, InputLabel, FormControl, Select, M
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
+import useWindowSize from 'react-use/lib/useWindowSize';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
 
@@ -29,6 +30,8 @@ function App() {
   const classes = useStyles();
 
   const [start, end, min, max] = [1415, 1780, 0, 10];
+
+  const {height} = useWindowSize();
 
   const data = () => Array.from({ length: end - start }, (v, k) => k + start).map((value) => {
     return ({ x: value, y: Math.random() * (max - min) + min })
@@ -201,7 +204,7 @@ function App() {
         </Box>
       </Typography>
       <FlexibleWidthXYPlot
-        height={600}
+        height={height-200}
         yDomain={[minimum(), maximum()]}
         xDomain={range()}
         animation
