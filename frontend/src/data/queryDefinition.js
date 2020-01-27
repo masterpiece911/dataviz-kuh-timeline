@@ -26,7 +26,9 @@ export const queries = (setParamOne, setParamTwo) => [{
             }
         ],
         title: (category, court) => `${category} im Hofstaat von Kaiser ${court}`,
-        data: (category, court) => { checkCaegory(category, court) }, 
+        data: (category, court) => {
+          return checkCaegory(category, court)
+        }, 
         name: `Demographie`,
     },
     {
@@ -37,7 +39,7 @@ export const queries = (setParamOne, setParamTwo) => [{
                     "geboren"
                 ],
                 initialValue: 'gestorben',
-                setter: (value) => { setParamOne(value) }
+                setter: (value) => {setParamOne(value) }
             },
             {
                 name: `Ort`,
@@ -47,8 +49,8 @@ export const queries = (setParamOne, setParamTwo) => [{
                 setter: (value) => { setParamTwo(value) }
             },
         ],
-        title: (category, place) => `Höflinge $(category) in $(place)`,
-        data: (category, place) => { checkForOrt(category, place) },
+        title: (category, place) => `Höflinge ${category} in ${place}`,
+        data: (category, place) => {return checkForOrt(category, place) },
         name: `Geographie`
     },
     {
@@ -67,8 +69,8 @@ export const queries = (setParamOne, setParamTwo) => [{
                 setter: (value) => { setParamTwo(value) }
             }
         ],
-        title: (office, court) => `$(office) im Hofstaat von $(court)`,
-        data: (office, court) => { checkForAmt(office, court) },
+        title: (office, court) => `${office} im Hofstaat von ${court}`,
+        data: (office, court) => {return checkForAmt(office, court) },
         name: `Amt`
     }
 ]
