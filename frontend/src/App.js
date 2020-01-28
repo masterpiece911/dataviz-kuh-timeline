@@ -8,7 +8,6 @@ import useWindowSize from 'react-use/lib/useWindowSize';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
 import { queries as queryDefinitions } from './data/queryDefinitions';
-import { curveCatmullRom } from 'd3-shape';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,7 +66,12 @@ function App() {
       if (!paramOne || !paramTwo) {
         return null;
       }
-      return queries[selectedQueryIndex].data(paramOne, paramTwo);
+      try {
+        return queries[selectedQueryIndex].data(paramOne, paramTwo);
+      } catch (error) {
+        console.log(error);
+        return {graph: [], persons: {}, max: 0}
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [paramOne, paramTwo, selectedQueryIndex]
@@ -77,7 +81,11 @@ function App() {
       if (!paramOne || paramCompare === '') {
         return null
       }
-      return queries[selectedQueryIndex].data(paramOne, paramCompare);
+      try {
+        return queries[selectedQueryIndex].data(paramOne, paramCompare);
+      } catch (error) {
+        return {graph: [], persons: {}, max: 0}
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [paramOne, paramCompare, selectedQueryIndex]
