@@ -7,14 +7,14 @@ export const queries = (setParamOne, setParamTwo) => [{
         params: [{
                 name: `Kategorie`,
                 listOfItems: [
-                    "Bevölkerung",
+                    "Anzahl erfasster Höflinge",
                     "Durschnittsalter",
-                    "Anzahl der Geburten",
-                    "Anzahl der Tode",
-                    "Herkunftsort der Höflinge",
-                    "Anzahl der Ämter"
+                    // "Anzahl der Geburten",
+                    // "Anzahl der Tode",
+                    // "Herkunftsort der Höflinge",
+                    // "Anzahl der Ämter"
                 ],
-                initialValue: 'Bevölkerung',
+                initialValue: 'Anzahl erfasster Höflinge',
                 setter: (value) => { setParamOne(value) }
             },
             {

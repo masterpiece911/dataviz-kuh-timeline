@@ -1,4 +1,4 @@
-export const initialKaiser = 'F2';
+export const initialKaiser = 'F1';
 
 export const kaiser = [
 {

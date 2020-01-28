@@ -13,7 +13,7 @@ export function checkForOrt(category, place) {
 
 export function checkCategory(category, court) {
     let persons;
-    if (category === "Bevölkerung") {
+    if (category === "Anzahl erfasster Höflinge") {
         persons = checkForKaiser(court);
         let yearObject = {};
         let yearArray = [];
@@ -50,10 +50,35 @@ export function checkCategory(category, court) {
         return { persons: yearObject, graph: yearArray, max: maxVal};
     }
     if (category === "Anzahl der Geburten") {
-        persons = bornIn(category)
+        
+        let yearObject = {};
+        let yearArray = [];
+        let maxVal = 0;
+        let sum = 0;
+        for (let year = start; year <= end; year += 1) {
+            yearObject[year] = personen.filter(person => (person.Geburtsdatum.substring(0, 4) === year));
+            sum = yearObject[year].length;
+            if (maxVal < sum) {
+                maxVal = sum;
+            }
+            yearArray.push({x: year, y: sum});
+        }
+        return { persons: yearObject, graph: yearArray, max: maxVal};
     }
     if (category === "Anzahl der Tode") {
-        persons = bornIn(category)
+        let yearObject = {};
+        let yearArray = [];
+        let maxVal = 0;
+        let sum = 0;
+        for (let year = start; year <= end; year += 1) {
+            yearObject[year] = personen.filter(person => (person.Todesdatum.substring(0, 4) === year));
+            sum = yearObject[year].length;
+            if (maxVal < sum) {
+                maxVal = sum;
+            }
+            yearArray.push({x: year, y: sum});
+        }
+        return { persons: yearObject, graph: yearArray, max: maxVal};
     }
 
     let yearObject = {};
