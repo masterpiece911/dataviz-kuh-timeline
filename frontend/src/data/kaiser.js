@@ -44,13 +44,6 @@ export const kaiser = [
     "spalte": "0"
 },
 {
-    "ID": "F4",
-    "NAME": "Ferdinand\u00a0IV.",
-    "start": "1633 Sep 08",
-    "end": "1654 Jul 09",
-    "spalte": "5"
-},
-{
     "ID": "L1",
     "NAME": "Leopold\u00a0I.",
     "start": "1640 Jun 09",

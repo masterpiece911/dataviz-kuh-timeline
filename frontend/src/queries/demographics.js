@@ -1,18 +1,24 @@
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterForCourt } from './utilities';
+import { filterForCourt, filterUnknownBirths, filterUnknownDeaths } from './utilities';
 import { start, end } from './definitions';
 
-const query = (setParamOne, setParamTwo) => {
+const anzErfassterPers = 'Anzahl erfasster Höflinge';
+// const avgAge = 'Durchschnittsalter';
+const avgReachedAge = 'durchschnittlich erreichtes Alter';
+
+
+const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
   return ({
     params: [
       {
         name: `Kategorie`,
         listOfItems: [
-          'Anzahl erfasster Höflinge',
-          'Durchschnittsalter',
+          anzErfassterPers,
+          // avgAge,
+          avgReachedAge,
         ],
-        initialValue: 'Anzahl erfasster Höflinge',
+        initialValue: anzErfassterPers,
         setter: (value) => { setParamOne(value) }
       },
       {
@@ -20,9 +26,14 @@ const query = (setParamOne, setParamTwo) => {
         listOfItems: kaiser,
         field: 'NAME',
         initialValue: kaiser[0],
-        setter: (value) => { setParamTwo(value) }
+        setter: (value) => {
+          setKaiserIDMethod(value.ID)
+          setParamTwo(value)
+        }
       }
     ],
+    hasHofstaat: true,
+    compare: true,
     title: (category, court) => titleFunction(category, court),
     data: (category, court) => demographicsData(category, court),
     name: `Demographie`,
@@ -30,36 +41,82 @@ const query = (setParamOne, setParamTwo) => {
 }
 
 const titleFunction = (category, court) => {
-  return `${category} im Hofstaat von Kaiser ${court}`;
+  return `${category} im Hofstaat ${court}`;
 }
 
 const demographicsData = (category, court) => {
+
   let persons;
-  if (category === "Anzahl erfasster Höflinge") {
+  if (category === anzErfassterPers) {
     persons = personen.filter(filterForCourt(court));
     let yearObject = {};
     let yearArray = [];
     let maxVal = 0;
-    for (let index = start; index <= end; index += 1) {
-      yearObject[index] = persons.filter((person) => person.Geburtsdatum <= index && index <= person.Todesdatum);
-      if (maxVal < yearObject[index].length) {
-        maxVal = yearObject[index].length;
+    let min = parseInt(court.start.substring(0, 4));
+    let max = parseInt(court.end.substring(0, 4));
+    for (let year = min; year <= max; year += 1) {
+      yearObject[year] = persons.filter((person) => person.Geburtsdatum <= year && year <= person.Todesdatum);
+      if (maxVal < yearObject[year].length) {
+        maxVal = yearObject[year].length;
       }
-      yearArray.push({ x: index, y: yearObject[index].length });
+      yearArray.push({ x: year, y: yearObject[year].length });
     }
     return { persons: yearObject, graph: yearArray, max: maxVal };
 
   }
-  if (category === "Durschnittsalter") {
-    persons = personen.filter(filterForCourt(court));
+
+  // if (category === avgAge) {
+  //   persons = personen
+  //     .filter(filterForCourt(court))
+  //     .filter(filterUnknownBirths)
+  //     .filter(filterUnknownDeaths)
+  //     .map((person) => {
+  //       person['yearOfBirth'] = parseInt(person.Geburtsdatum.substring(0, 4));
+  //       person['yearOfDeath'] = parseInt(person.Todesdatum.substring(0, 4));
+  //       return person;
+  //     });
+
+  //   let yearObject = {};
+  //   let yearArray = [];
+  //   let maxVal = 0;
+  //   let sum = 0;
+  //   let val = 0;
+  //   for (let year = start; year <= end; year += 1) {
+  //     yearObject[year] = persons.filter((person) => person.yearOfBirth <= year && year <= person.yearOfDeath);
+  //     sum = yearObject[year].reduce((prev, person) => { return (prev + year - person.yearOfBirth) }, 0);
+  //     val = sum / yearObject[year].length;
+  //     if (isNaN(val)) {
+  //       val = 0;
+  //     }
+  //     if (maxVal < val) {
+  //       maxVal = val;
+  //     }
+  //     yearArray.push({ x: year, y: val });
+  //   }
+  //   return { persons: yearObject, graph: yearArray, max: maxVal };
+  // }
+  if (category === avgReachedAge) {
+    persons = personen
+      .filter(filterForCourt(court))
+      .filter(filterUnknownBirths)
+      .filter(filterUnknownDeaths)
+      .map((person) => {
+        person['yearOfBirth'] = parseInt(person.Geburtsdatum.substring(0, 4));
+        person['yearOfDeath'] = parseInt(person.Todesdatum.substring(0, 4));
+        return person;
+      });
+
+
     let yearObject = {};
     let yearArray = [];
     let maxVal = 0;
     let sum = 0;
     let val = 0;
-    for (let year = start; year <= end; year += 1) {
-      yearObject[year] = persons.filter((person) => person.Geburtsdatum <= year && year <= person.Todesdatum);
-      sum = yearObject[year].reduce((prev, person) => { return (prev + year - person.Geburtsdatum) }, 0);
+    let min = parseInt(court.start.substring(0, 4));
+    let max = parseInt(court.end.substring(0, 4));
+    for (let year = min; year <= max; year += 1) {
+      yearObject[year] = persons.filter((person) => person.yearOfBirth <= year && year <= person.yearOfDeath);
+      sum = yearObject[year].reduce((prev, person) => { return (prev + person.yearOfDeath - person.yearOfBirth) }, 0);
       val = sum / yearObject[year].length;
       if (isNaN(val)) {
         val = 0;
@@ -71,6 +128,7 @@ const demographicsData = (category, court) => {
     }
     return { persons: yearObject, graph: yearArray, max: maxVal };
   }
+
   if (category === "Anzahl der Geburten") {
 
     let yearObject = {};
@@ -103,14 +161,7 @@ const demographicsData = (category, court) => {
     return { persons: yearObject, graph: yearArray, max: maxVal };
   }
 
-  let yearObject = {};
-  let yearArray = [];
-  for (let index = start; index <= end; index += 1) {
-    yearObject[index] = persons.filter((person) => person.Geburtsdatum <= index && index <= person.Todesdatum);
-    yearArray.push({ x: index, y: yearObject[index].length });
-  }
-
-  return { persons: yearObject, graph: yearArray };
+  throw "INVALID PARAMETER IN DEMOGRAPHICS QUERY";
 
 }
 

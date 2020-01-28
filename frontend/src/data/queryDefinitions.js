@@ -4,8 +4,8 @@ import { aemter } from './amt';
 import Demographics from '../queries/demographics';
 import { checkForOrt, checkForAmt, } from '../queries/query';
 
-export const queries = (setParamOne, setParamTwo) => [
-    Demographics(setParamOne, setParamTwo),
+export const queries = (setParamOne, setParamTwo, setKaiserIDMethod) => [
+    Demographics(setParamOne, setParamTwo, setKaiserIDMethod),
     {
         params: [{
             name: `Kategorie`,
