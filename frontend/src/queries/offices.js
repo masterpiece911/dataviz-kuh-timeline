@@ -48,7 +48,7 @@ const officeData = (office, court) => {
     let val = 0;
     for (let year = start; year <= end; year += 1) {
         yearObject[year] = persons.filter((person) => person.office === office);
-        val++;
+        val = yearObject[year].length;
         if (isNaN(val)) {
             val = 0;
         }

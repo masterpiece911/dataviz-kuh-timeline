@@ -53,7 +53,7 @@ const geographicalData = (category, place) => {
         let max = parseInt(court.end.substring(0, 4));
         for (let year = min; year <= max; year += 1) {
             yearObject[year] = persons.filter((person) => person.placeOfDeath === place);
-            val++;
+            val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
             }
@@ -81,7 +81,7 @@ const geographicalData = (category, place) => {
         let max = parseInt(court.end.substring(0, 4));
         for (let year = min; year <= max; year += 1) {
             yearObject[year] = persons.filter((person) => person.placeOfBirth === place);
-            val++;
+            val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
             }
