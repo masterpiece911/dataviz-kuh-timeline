@@ -38,7 +38,6 @@ const geographicalData = (category, place) => {
     // TODO
     if (category === diedIn) {
         persons = personen
-            .filter(filterUnknownDeathPlaces)
             .map((person) => {
                 person['placeOfDeath'] = person.Sterbeort;
                 return person;
@@ -52,7 +51,7 @@ const geographicalData = (category, place) => {
         let min = parseInt(court.start.substring(0, 4));
         let max = parseInt(court.end.substring(0, 4));
         for (let year = min; year <= max; year += 1) {
-            yearObject[year] = persons.filter((person) => person.placeOfDeath === place);
+            yearObject[year] = persons.filter((person) => person.placeOfDeath == place);
             val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
@@ -66,7 +65,6 @@ const geographicalData = (category, place) => {
     }
     if (category === bornIn) {
         persons = personen
-            .filter(filterUnknownBirthPlaces)
             .map((person) => {
                 person['placeOfBirth'] = person.Geburtsort;
                 return person;
@@ -80,7 +78,7 @@ const geographicalData = (category, place) => {
         let min = parseInt(court.start.substring(0, 4));
         let max = parseInt(court.end.substring(0, 4));
         for (let year = min; year <= max; year += 1) {
-            yearObject[year] = persons.filter((person) => person.placeOfBirth === place);
+            yearObject[year] = persons.filter((person) => person.placeOfBirth == place);
             val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
