@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, } from 'react';
 import useDimensions from "react-use-dimensions";
 import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries, HorizontalGridLines, VerticalBarSeries } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
@@ -111,18 +111,23 @@ function App() {
       max = max < otherMax ? otherMax : max
     }
 
-    console.log('min max', min, max);
-    
+    let lowerBound = false, upperBound = false;
 
     if (min <= start + 5) {
-      return [start, max + 5]
+      lowerBound = true;
     }
 
     if (max >= end - 5) {
-      return [min - 5, end]
+      upperBound = true;
     }
 
-    return [min - 5, max + 5]
+    min = min - 5;
+    max = max + 5;
+
+    return [
+      lowerBound ? start : min,
+      upperBound ? end : max
+    ]
   }
 
   const getKaiserData = () => {
@@ -150,12 +155,13 @@ function App() {
   const kaiserData = getKaiserData();
 
   const maximum = () => {
+    let maximum;
     if (paramCompare !== '') {
-      return (graphData.max < graphCompareData.max 
+      maximum = graphData.max < graphCompareData.max 
       ? graphCompareData.max 
-      : graphData.max)
-    }
-    return graphData.max;
+      : graphData.max
+    } else maximum = graphData.max;
+    return maximum <= 5 ? 5 : maximum;
   }
 
   const minimum = () => {
@@ -205,7 +211,7 @@ function App() {
     <div className={classes.root}>
       <AppBar ref={header} position="static" style={{ color: '#ffffff' }}>
         <Toolbar>
-          <Typography variant="h4" className={classes.title} style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 600, fontStyle: 'italic' }} >
+          <Typography variant="h4" className={classes.title} style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic' }} >
             PROJECT TIMELINE
         </Typography>
         </Toolbar>
@@ -215,7 +221,7 @@ function App() {
           <Grid item xs>
             <FormControl fullWidth color="primary" variant="standard" className={classes.formControl}>
               <InputLabel>
-                Anfrage
+                Kategorie
             </InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -223,6 +229,9 @@ function App() {
                 id="demo-simple-select-outlined"
                 onChange={(event) => {
                   setSelectedQueryIndex(event.target.value);
+                  setComparingKaiser(false);
+                  setSelectedKaiserID(initialKaiser);
+                  setParamCompare("");
                   setParamOne(queries[event.target.value].params[0].initialValue);
                   setParamTwo(queries[event.target.value].params[1].initialValue);
                 }}
@@ -317,7 +326,7 @@ function App() {
           </Grid>
         </Grid>
       </Container>
-      <Box ref={title} fontSize="2.5rem" style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 600, fontStyle: 'italic', textAlign: 'center', }}>
+      <Box ref={title} fontSize="2.5rem" style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic', textAlign: 'center', }}>
         <span style={{color: blue }}>{makeTitle()}</span><span style={{color: red}}>{makeCompareTitle()}</span>
       </Box>
       <FlexibleWidthXYPlot
@@ -374,11 +383,16 @@ function App() {
           }}
           hideLine tickSize={0}
         />
+
+        <HorizontalGridLines style={maximum() > 5 ? {strokeOpacity: 1} : {strokeOpacity: 0}} />
+
         {graphCompareData !== null
         ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph} curve={'curveBasis'} onNearestX={hovered} />
         : null }
 
         <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} curve={'curveBasis'} onNearestX={hovered} />
+
+        {/* <VerticalBarSeries color={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} /> */}
 
         {/* {console.log(personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])}))}
         <LineMarkSeries

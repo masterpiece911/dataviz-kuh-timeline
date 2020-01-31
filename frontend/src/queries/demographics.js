@@ -12,7 +12,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
   return ({
     params: [
       {
-        name: `Kategorie`,
+        name: `Filter`,
         listOfItems: [
           anzErfassterPers,
           // avgAge,

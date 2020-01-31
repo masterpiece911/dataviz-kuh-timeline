@@ -6,14 +6,18 @@ import { filterUnknownBirthPlaces, filterUnknownDeathPlaces } from './utilities'
 
 const diedIn = 'Todesort';
 const bornIn = 'Geburtsort';
+const unknownBirthplace = 'mit unbekanntem Geburtsort';
+const unknownPlaceOfDeath = 'mit unbekanntem Todesort';
 
 const query = (setParamOne, setParamTwo) => {
     return ({
         params: [{
-                name: `Kategorie`,
+                name: `Filter`,
                 listOfItems: [
                     diedIn,
                     bornIn,
+                    unknownBirthplace,
+                    unknownPlaceOfDeath
                 ],
                 initialValue: diedIn,
                 setter: (value) => { setParamOne(value) }
@@ -49,9 +53,7 @@ const geographicalData = (category, place) => {
         let yearArray = [];
         let maxVal = 0;
         let val = 0;
-        let min = parseInt(court.start.substring(0, 4));
-        let max = parseInt(court.end.substring(0, 4));
-        for (let year = min; year <= max; year += 1) {
+        for (let year = start; year <= end; year += 1) {
             yearObject[year] = persons.filter((person) => person.placeOfDeath === place);
             val = yearObject[year].length;
             if (isNaN(val)) {
@@ -77,10 +79,8 @@ const geographicalData = (category, place) => {
         let yearArray = [];
         let maxVal = 0;
         let val = 0;
-        let min = parseInt(court.start.substring(0, 4));
-        let max = parseInt(court.end.substring(0, 4));
-        for (let year = min; year <= max; year += 1) {
-            yearObject[year] = persons.filter((person) => person.placeOfBirth === place);
+        for (let year = start; year <= end; year += 1) {
+            yearObject[year] = persons.filter((person) => person.placeOfBirth === place.Ort);
             val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
@@ -93,7 +93,26 @@ const geographicalData = (category, place) => {
         return { persons: yearObject, graph: yearArray, max: maxVal };
     }
 
-
+    if (category === unknownBirthplace ) {
+        // TODO UNFINISHED
+        persons = personen
+            .filter(!filterUnknownBirthPlaces);
+        
+        let yearObject = {};
+        let yearArray = [];
+        let maxVal = 0;
+        let val = 0;
+        for (let year = start; year <= end; year += 1) {
+            yearObject[year] = persons.filter((person) => 
+                person.Geburtsdatum <= year && year <= person.Todesdatum
+            );
+            if (maxVal < yearObject[year].length) {
+                maxVal = yearObject[year].length;
+            }
+            yearArray.push({x: year, y: yearObject[year].length});
+        }
+        return { persons: yearObject, graph: yearArray, max: maxVal };
+    }
 
 
 
