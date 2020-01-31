@@ -42,7 +42,6 @@ const geographicalData = (category, place) => {
     // TODO
     if (category === diedIn) {
         persons = personen
-            .filter(filterUnknownDeathPlaces)
             .map((person) => {
                 person['placeOfDeath'] = person.Sterbeort;
                 return person;
@@ -68,7 +67,6 @@ const geographicalData = (category, place) => {
     }
     if (category === bornIn) {
         persons = personen
-            .filter(filterUnknownBirthPlaces)
             .map((person) => {
                 person['placeOfBirth'] = person.Geburtsort;
                 return person;
