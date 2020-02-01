@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/dataviz-kuh-timeline/static/css/main.69eda509.chunk.css",
+    "main.js": "/dataviz-kuh-timeline/static/js/main.ac5376f1.chunk.js",
+    "main.js.map": "/dataviz-kuh-timeline/static/js/main.ac5376f1.chunk.js.map",
+    "runtime-main.js": "/dataviz-kuh-timeline/static/js/runtime-main.6a9c0da5.js",
+    "runtime-main.js.map": "/dataviz-kuh-timeline/static/js/runtime-main.6a9c0da5.js.map",
+    "static/css/2.5a2f7233.chunk.css": "/dataviz-kuh-timeline/static/css/2.5a2f7233.chunk.css",
+    "static/js/2.30f11e8a.chunk.js": "/dataviz-kuh-timeline/static/js/2.30f11e8a.chunk.js",
+    "static/js/2.30f11e8a.chunk.js.map": "/dataviz-kuh-timeline/static/js/2.30f11e8a.chunk.js.map",
+    "index.html": "/dataviz-kuh-timeline/index.html",
+    "precache-manifest.d2a68b101e0b8fe9ee76f6ddb923c32d.js": "/dataviz-kuh-timeline/precache-manifest.d2a68b101e0b8fe9ee76f6ddb923c32d.js",
+    "service-worker.js": "/dataviz-kuh-timeline/service-worker.js",
+    "static/css/2.5a2f7233.chunk.css.map": "/dataviz-kuh-timeline/static/css/2.5a2f7233.chunk.css.map",
+    "static/css/main.69eda509.chunk.css.map": "/dataviz-kuh-timeline/static/css/main.69eda509.chunk.css.map",
+    "static/js/2.30f11e8a.chunk.js.LICENSE": "/dataviz-kuh-timeline/static/js/2.30f11e8a.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6a9c0da5.js",
+    "static/css/2.5a2f7233.chunk.css",
+    "static/js/2.30f11e8a.chunk.js",
+    "static/css/main.69eda509.chunk.css",
+    "static/js/main.ac5376f1.chunk.js"
+  ]
+}
