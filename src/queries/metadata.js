@@ -93,9 +93,6 @@ const metaheuristics = (court, category) => {
   let yearArray = [];
   let totalArray = [];
 
-  console.log(category);
-  
-
   switch (category) {
     case exactDoB: persons = persons.filter(filterIncompleteDateOfBirths); break;
     case exactDoD: persons = persons.filter(filterIncompleteDateOfDeaths); break;
@@ -113,18 +110,10 @@ const metaheuristics = (court, category) => {
   }
 
   for (let year = min; year <= max; year += 1) {
-    console.log(persons);
     yearObject[year] = persons;
     yearArray.push({ x: year, y: persons.length });
     totalArray.push({ x: year, y: totalVal });
   }
-  console.log('persons', yearObject);
-  console.log('graph', yearArray);
-  console.log('total', totalArray);
-  console.log('max', totalVal + 5);
-  
-  
-  
   
   return { persons: yearObject, graph: yearArray, total: totalArray, max: totalVal };
 

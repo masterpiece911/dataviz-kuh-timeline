@@ -43,8 +43,6 @@ const titleFunction = (category, place) => {
 
 const geographicalData = (category, place) => {
 
-    console.log(place);
-    
     let persons;
     // TODO
     if (category === diedIn) {
