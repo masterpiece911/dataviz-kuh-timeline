@@ -1,13 +1,10 @@
 import { Orte } from '../data/orte';
 import { personen } from '../data/personen';
 import { start, end } from './definitions';
-import { filterUnknownBirthPlaces, filterUnknownDeathPlaces } from './utilities';
 
 
 const diedIn = 'Todesort';
 const bornIn = 'Geburtsort';
-const unknownBirthplace = 'mit unbekanntem Geburtsort';
-const unknownPlaceOfDeath = 'mit unbekanntem Todesort';
 
 const query = (setParamOne, setParamTwo) => {
     return ({
@@ -16,8 +13,6 @@ const query = (setParamOne, setParamTwo) => {
                 listOfItems: [
                     diedIn,
                     bornIn,
-                    unknownBirthplace,
-                    unknownPlaceOfDeath
                 ],
                 initialValue: diedIn,
                 setter: (value) => { setParamOne(value) }
@@ -30,14 +25,26 @@ const query = (setParamOne, setParamTwo) => {
                 setter: (value) => { setParamTwo(value) }
             },
         ],
-        title: (category, place) => `Höflinge ${category} in ${place}`,
+        title: (category, place) => titleFunction(category, place),
         data: (category, place) => { return geographicalData(category, place) },
         name: `Geographie`
     })
 }
 
+const titleFunction = (category, place) => {
+    switch(category) {
+        case diedIn:
+            return `Höflinge verstorben in ${place}`
+        case bornIn:
+            return `Höflinge, aus ${place} abstammend`
+        default: throw new Error('unknown category in titleFunction of geographics query');
+    }
+}
+
 const geographicalData = (category, place) => {
 
+    console.log(place);
+    
     let persons;
     // TODO
     if (category === diedIn) {
@@ -53,7 +60,7 @@ const geographicalData = (category, place) => {
         let maxVal = 0;
         let val = 0;
         for (let year = start; year <= end; year += 1) {
-            yearObject[year] = persons.filter((person) => person.placeOfDeath === place);
+            yearObject[year] = persons.filter((person) => person.placeOfDeath === place.Ort);
             val = yearObject[year].length;
             if (isNaN(val)) {
                 val = 0;
@@ -90,30 +97,6 @@ const geographicalData = (category, place) => {
         }
         return { persons: yearObject, graph: yearArray, max: maxVal };
     }
-
-    if (category === unknownBirthplace ) {
-        // TODO UNFINISHED
-        persons = personen
-            .filter(!filterUnknownBirthPlaces);
-        
-        let yearObject = {};
-        let yearArray = [];
-        let maxVal = 0;
-        let val = 0;
-        for (let year = start; year <= end; year += 1) {
-            yearObject[year] = persons.filter((person) => 
-                person.Geburtsdatum <= year && year <= person.Todesdatum
-            );
-            if (maxVal < yearObject[year].length) {
-                maxVal = yearObject[year].length;
-            }
-            yearArray.push({x: year, y: yearObject[year].length});
-        }
-        return { persons: yearObject, graph: yearArray, max: maxVal };
-    }
-
-
-
 
     //throw "NOT IMPLEMENTED YET";
     // return {graph: [], persons: {}, max: 0}

@@ -1,6 +1,6 @@
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterForCourt, filterUnknownBirths, filterUnknownDeaths } from './utilities';
+import { filterForCourt, filterUnknownBirths, filterUnknownDeaths } from './filterFunctions';
 import { start, end } from './definitions';
 
 const anzErfassterPers = 'Anzahl erfasster Höflinge';
@@ -61,6 +61,7 @@ const demographicsData = (category, court) => {
       }
       yearArray.push({ x: year, y: yearObject[year].length });
     }
+  
     return { persons: yearObject, graph: yearArray, max: maxVal };
 
   }
@@ -161,7 +162,7 @@ const demographicsData = (category, court) => {
     return { persons: yearObject, graph: yearArray, max: maxVal };
   }
 
-  throw "INVALID PARAMETER IN DEMOGRAPHICS QUERY";
+  throw new Error("INVALID PARAMETER IN DEMOGRAPHICS QUERY");
 
 }
 

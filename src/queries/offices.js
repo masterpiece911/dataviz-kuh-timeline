@@ -1,8 +1,7 @@
 import { aemter } from '../data/amt';
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterForCourt } from './utilities';
-import { start, end } from './definitions';
+import { filterForCourt } from './filterFunctions';
 
 const query = (setParamOne, setParamTwo, setKaiserID) => {
     return ({

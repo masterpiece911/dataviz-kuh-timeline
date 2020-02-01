@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, } from 'react';
 import useDimensions from "react-use-dimensions";
 import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, LineMarkSeries, HorizontalGridLines, VerticalBarSeries } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
@@ -35,10 +35,8 @@ function App() {
   const [header, headerSize] = useDimensions();
   const [toolbar, toolbarSize] = useDimensions();
   const [title, titleSize] = useDimensions();
-  const [graph, graphSize] = useDimensions();
-  const [legend, legendSize] = useDimensions();
 
-  const [crossHairValues, setCrossHairValues] = useState([]);
+  const [crossHairValues, setCrossHairValues] = useState(null);
   const [selectedKaiserID, setSelectedKaiserID] = useState(initialKaiser);
 
   const [paramOne, setParamOne] = useState(null);
@@ -54,6 +52,7 @@ function App() {
     queries[selectedQueryIndex].params.forEach(({ setter, initialValue }) => {
       setter(initialValue);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!paramOne || !paramTwo) {
@@ -70,7 +69,7 @@ function App() {
         return queries[selectedQueryIndex].data(paramOne, paramTwo);
       } catch (error) {
         console.log(error);
-        return {graph: [], persons: {}, max: 0}
+        return {graph: [], persons: {}, max: 5}
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +83,7 @@ function App() {
       try {
         return queries[selectedQueryIndex].data(paramOne, paramCompare);
       } catch (error) {
-        return {graph: [], persons: {}, max: 0}
+        return {graph: [], persons: {}, max: 5}
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,8 +169,33 @@ function App() {
   }
 
   const hovered = (value, { index }) => {
-    let valueRounded = { x: value.x, y: Math.round(value.y) }
-    setCrossHairValues([valueRounded])
+
+    let val = {};
+    val["x"] = value.x;
+    const graphDataIndex = value.x - graphData.graph[0].x;
+    
+    if (graphDataIndex <  graphData.graph.length && graphDataIndex >= 0) {
+      val["val"] = Math.trunc(graphData.graph[graphDataIndex].y);
+      if(graphData.total) {
+        val["total"] = graphData.total[graphDataIndex].y;
+      }
+    }
+
+    if(graphCompareData !== null) {
+      const graphCompareDataIndex = value.x - graphCompareData.graph[0].x;
+      
+      if (graphCompareDataIndex < graphCompareData.graph.length && graphCompareDataIndex >= 0) {
+        val['valCompare'] = Math.trunc(graphCompareData.graph[graphCompareDataIndex].y);
+        if(graphCompareData.total) {
+          val['totalCompare'] = graphCompareData.total[graphCompareDataIndex].y;
+        }
+      }
+    }
+
+    setCrossHairValues([val]);
+
+    // let valueRounded = { x: value.x, y: Math.round(value.y) }
+    // setCrossHairValues([valueRounded])
   }
 
   const kaiserClicked = (id) => {
@@ -201,6 +225,13 @@ function App() {
       const text = compParamField ? paramCompare[compParamField] : paramCompare;
       return `, verglichen mit ${text}`
     }
+  }
+
+  const guiHeight = () => {
+    if (height && titleSize.height && headerSize.height && toolbarSize.height) {
+      return height - (titleSize.height + headerSize.height + toolbarSize.height);
+    }
+    return height - 210;
   }
 
   if (!paramOne || !paramTwo) {
@@ -235,7 +266,6 @@ function App() {
                   setParamOne(queries[event.target.value].params[0].initialValue);
                   setParamTwo(queries[event.target.value].params[1].initialValue);
                 }}
-                autoWidth
               >
                 {queries.map((item, index) => {
                   return (
@@ -262,7 +292,6 @@ function App() {
                       setComparingKaiser(false);
                       param.setter(event.target.value)
                     }}
-                    autoWidth
                   >
                     {param.listOfItems.map((item) => {
                       if (param.field) {
@@ -294,24 +323,28 @@ function App() {
                   labelId={`params-compare-input-label`}
                   value={paramCompare}
                   onChange={(event) => {
+                    if(event.target.value === '') {
+                      setComparingKaiser(false);
+                      setParamCompare('');
+                      return;
+                    }
                     if(queries[selectedQueryIndex].params[1].name === 'Hofstaat') {
                       setComparingKaiser(true);
                     }
                     setParamCompare(event.target.value)
                   }}
-                  autoWidth
                 >
-                  {[""].concat(queries[selectedQueryIndex].params[1].listOfItems).map((item)=> {
+                  {[""].concat(queries[selectedQueryIndex].params[1].listOfItems).filter(i => i !== paramTwo).map((item)=> {
                     if (queries[selectedQueryIndex].params[1].field) {
                       return (
                         <MenuItem key={item[queries[selectedQueryIndex].params[1].field]} value={item}>
-                          {item[queries[selectedQueryIndex].params[1].field]}
+                          {item === '' ? 'kein Vergleich' : item[queries[selectedQueryIndex].params[1].field]}
                         </MenuItem>
                       )
                     }
                     return (
                         <MenuItem key={item} value={item} >
-                          {item}
+                          {item === '' ? 'kein Vergleich' : item}
                         </MenuItem>
                     )
                   })}
@@ -329,13 +362,14 @@ function App() {
       <Box ref={title} fontSize="2.5rem" style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic', textAlign: 'center', }}>
         <span style={{color: blue }}>{makeTitle()}</span><span style={{color: red}}>{makeCompareTitle()}</span>
       </Box>
+
+
       <FlexibleWidthXYPlot
-        ref={graph}
-        height={(height - headerSize.height - titleSize.height - toolbarSize.height) * 0.7}
+        height={guiHeight() * 0.7}
         yDomain={[0, maximum()]}
         xDomain={range()}
         animation={true}
-        onMouseLeave={() => setCrossHairValues([])}
+        onMouseLeave={() => setCrossHairValues(null)}
       >
 
         <GradientDefs>
@@ -348,10 +382,23 @@ function App() {
             <stop offset="100%" stopColor={red} stopOpacity={0.0} />
           </linearGradient>
         </GradientDefs>
-        {crossHairValues.length > 0 && !comparingKaiser
-          ? <Crosshair style={{ line: { background: blue, width: '2px' } }} values={crossHairValues} >
-            <div style={{ textAlign: 'center', width: '64px', background: blue, borderRadius: '4px', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '7px 10px', boxShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-              <p style={{ margin: 0 }}>{crossHairValues[0].y}</p>
+        {crossHairValues !== null
+          ? <Crosshair style={{ line: { background: '#000', width: '2px' } }} values={crossHairValues} >
+            <div style={{display: 'inline-block'}}>
+            <div style={{ textAlign: 'center', background: '#000', borderRadius: '4px', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '7px 10px', boxShadow: '0 2px 4px rgba(0,0,0,0.5)', marginBottom: '4px' }}>
+              <p style={{margin: 0, whiteSpace: 'nowrap'}}>{crossHairValues[0].x}</p>
+            </div>
+            { crossHairValues[0]['val']
+            ? <div style={{ textAlign: 'center', background: blue, borderRadius: '4px', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '7px 10px', boxShadow: '0 2px 4px rgba(0,0,0,0.5)', marginBottom: '4px' }}>
+              <p style={{ margin: 0, whiteSpace: 'nowrap' }}>{crossHairValues[0].val}{crossHairValues[0].total ? ` von ${crossHairValues[0].total}` : null}</p>
+            </div>
+            : null}
+            { crossHairValues[0]['valCompare']
+            ? <div style={{ textAlign: 'center', background: red, borderRadius: '4px', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '7px 10px', boxShadow: '0 2px 4px rgba(0,0,0,0.5)', marginBottom: '4px' }}>
+              <p style={{ margin: 0, whiteSpace: 'nowrap' }}>{crossHairValues[0].valCompare}{crossHairValues[0].totalCompare ? ` von ${crossHairValues[0].totalCompare}` : null}</p>
+            </div>
+            : null
+            }
             </div>
           </Crosshair>
           : null
@@ -365,9 +412,9 @@ function App() {
           }}
           hideLine tickSize={0}
           tickFormat={(value, index, scale, tickTotal) => {
-            if (value % 3 === 0) {
+            /* if (value % 3 === 0) {
               return Math.trunc(value);
-            } return "";
+            } */ return Math.trunc(value);
           }}
         />
         <YAxis
@@ -384,15 +431,27 @@ function App() {
           hideLine tickSize={0}
         />
 
+
         <HorizontalGridLines style={maximum() > 5 ? {strokeOpacity: 1} : {strokeOpacity: 0}} />
 
+        {graphCompareData !== null && graphCompareData.total
+        ? <AreaSeries fill={'#fff0'} stroke={red} data={graphCompareData.total} curve={'curveBasis'} />
+        : null
+        }
+
         {graphCompareData !== null
-        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph} curve={'curveBasis'} onNearestX={hovered} />
+        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph} curve={'curveBasis'} />
         : null }
 
-        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} curve={'curveBasis'} onNearestX={hovered} />
+        {graphData.total
+        ? <AreaSeries fill={'#fff0'} stroke={blue} data={graphData.total} curve={'curveBasis'} />
+        : null
+        }
 
-        {/* <VerticalBarSeries color={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} /> */}
+
+        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} curve={'curveBasis'} />
+
+        <HorizontalRectSeries data={getRange(range()[0], range()[1]).map(i => {return({x: i, x0: i, y: 0, y0: maximum()})})} stroke='#0000' fill='#0000' onNearestX={hovered} />
 
         {/* {console.log(personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])}))}
         <LineMarkSeries
@@ -404,12 +463,10 @@ function App() {
 
       </FlexibleWidthXYPlot>
       <FlexibleWidthXYPlot
-        ref={legend}
-        height={(height - toolbarSize.height - headerSize.height - titleSize.height) * 0.3}
+        height={guiHeight() * 0.3}
         yDomain={[minimum(), 0]}
         xDomain={range()}
         animation={true}
-
       >
         {kaiserData.map((value) => {
           if (value.id === selectedKaiserID) {
