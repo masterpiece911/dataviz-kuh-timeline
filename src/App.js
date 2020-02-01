@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, } from 'react';
 import useDimensions from "react-use-dimensions";
-import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container } from '@material-ui/core';
+import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container, Link } from '@material-ui/core';
 import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
@@ -243,7 +243,7 @@ function App() {
       <AppBar ref={header} position="static" style={{ color: '#ffffff' }}>
         <Toolbar>
           <Typography variant="h4" className={classes.title} style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic' }} >
-            PROJECT TIMELINE
+            PROJECT TIMELINE: Ein <Link style={{color: '#fffa'}} rel='external' href="http://kaiserhof.geschichte.lmu.de/">Kaiser und Höfe</Link> Visualisierungs-Projekt
         </Typography>
         </Toolbar>
       </AppBar>
@@ -368,6 +368,7 @@ function App() {
         height={guiHeight() * 0.7}
         yDomain={[0, maximum()]}
         xDomain={range()}
+        margin={{left: 40, right: 10, top: 10, bottom: 20}}
         animation={true}
         onMouseLeave={() => setCrossHairValues(null)}
       >
@@ -466,6 +467,7 @@ function App() {
         height={guiHeight() * 0.3}
         yDomain={[minimum(), 0]}
         xDomain={range()}
+        margin={{left: 40, right: 10, top: 0, bottom: 10}}
         animation={true}
       >
         {kaiserData.map((value) => {
