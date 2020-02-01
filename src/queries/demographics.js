@@ -18,7 +18,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
           // avgAge,
           avgReachedAge,
         ],
-        initialValue: anzErfassterPers,
+        initialValue: avgReachedAge,
         setter: (value) => { setParamOne(value) }
       },
       {
