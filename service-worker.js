@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dataviz-kuh-timeline/precache-manifest.d2a68b101e0b8fe9ee76f6ddb923c32d.js"
+  "/dataviz-kuh-timeline/precache-manifest.ba0667763215ee9d9f092d3db1306892.js"
 );
 
 self.addEventListener('message', (event) => {

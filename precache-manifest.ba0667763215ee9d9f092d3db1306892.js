@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "525679cc46ed7694c439fe62541819cd",
+    "revision": "74e0d3917a7713b9c403ae360627f6fd",
     "url": "/dataviz-kuh-timeline/index.html"
   },
   {
