@@ -1,250 +1,334 @@
-export const aemter = [{
-        "Hofamt": "Edeljungfrau"
+export const offices = [
+    {
+        "ID": "D",
+        "NAME": "Edeljungfrau"
     },
     {
-        "Hofamt": "Edelknabe"
+        "ID": "E",
+        "NAME": "Edelknabe"
     },
     {
-        "Hofamt": "Vorschneider"
+        "ID": "Fs",
+        "NAME": "Vorschneider"
     },
     {
-        "Hofamt": "Geheimer Rat"
+        "ID": "GR",
+        "NAME": "Geheimer Rat"
     },
     {
-        "Hofamt": "Hofdiener"
+        "ID": "H",
+        "NAME": "Hofdiener"
     },
     {
-        "Hofamt": "Hofdiener (ohne Besoldung)"
+        "ID": "H0",
+        "NAME": "Hofdiener (ohne Besoldung)"
     },
     {
-        "Hofamt": "Hofdiener (auf 1 Pferd)"
+        "ID": "H1",
+        "NAME": "Hofdiener (auf 1 Pferd)"
     },
     {
-        "Hofamt": "Hofdiener (auf 2 Pferden)"
+        "ID": "H2",
+        "NAME": "Hofdiener (auf 2 Pferden)"
     },
     {
-        "Hofamt": "Hofdiener (auf 3 und mehr Pferden)"
+        "ID": "H3",
+        "NAME": "Hofdiener (auf 3 und mehr Pferden)"
     },
     {
-        "Hofamt": "Hartschierhauptmann"
+        "ID": "HarHM",
+        "NAME": "Hartschierhauptmann"
     },
     {
-        "Hofamt": "Hofbuchhalter"
+        "ID": "HB",
+        "NAME": "Hofbuchhalter"
     },
     {
-        "Hofamt": "Hofkanzler"
+        "ID": "HC",
+        "NAME": "Hofkanzler"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r"
+        "ID": "HCSek",
+        "NAME": "Hofsekret\u00e4r"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (burgundischer Expedition)"
+        "ID": "HCSekBG",
+        "NAME": "Hofsekret\u00e4r (burgundischer Expedition)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (deutscher Expedition f\u00fcr B\u00f6hmen)"
+        "ID": "HCSekBO",
+        "NAME": "Hofsekret\u00e4r (deutscher Expedition f\u00fcr B\u00f6hmen)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (b\u00f6hmischer Expedition)"
+        "ID": "HCSekCZ",
+        "NAME": "Hofsekret\u00e4r (b\u00f6hmischer Expedition)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (spanischer Expedition)"
+        "ID": "HCSekES",
+        "NAME": "Hofsekret\u00e4r (spanischer Expedition)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (ungarischer Expedition)"
+        "ID": "HCSekHU",
+        "NAME": "Hofsekret\u00e4r (ungarischer Expedition)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (lateinischer Expedition)"
+        "ID": "HCSekLA",
+        "NAME": "Hofsekret\u00e4r (lateinischer Expedition)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (f\u00fcr Lausitz)"
+        "ID": "HCSekLS",
+        "NAME": "Hofsekret\u00e4r (f\u00fcr Lausitz)"
     },
     {
-        "Hofamt": "Hofsekret\u00e4r (f\u00fcr Schlesien)"
+        "ID": "HCSekSL",
+        "NAME": "Hofsekret\u00e4r (f\u00fcr Schlesien)"
     },
     {
-        "Hofamt": "Hofkammerdiener"
+        "ID": "HKaD",
+        "NAME": "Hofkammerdiener"
     },
     {
-        "Hofamt": "Hofkammerkonzipist"
+        "ID": "HKaKon",
+        "NAME": "Hofkammerkonzipist"
     },
     {
-        "Hofamt": "Hofkammerpr\u00e4sident"
+        "ID": "HKaP",
+        "NAME": "Hofkammerpr\u00e4sident"
     },
     {
-        "Hofamt": "Hofkammerpr\u00e4sident (Amtsverwalter)"
+        "ID": "HKaPX",
+        "NAME": "Hofkammerpr\u00e4sident (Amtsverwalter)"
     },
     {
-        "Hofamt": "Hofkammerrat"
+        "ID": "HKaR",
+        "NAME": "Hofkammerrat"
     },
     {
-        "Hofamt": "Hofkammerregistrator"
+        "ID": "HKaReg",
+        "NAME": "Hofkammerregistrator"
     },
     {
-        "Hofamt": "Hofkammerregistrator (Adjunkt)"
+        "ID": "HKaRegA",
+        "NAME": "Hofkammerregistrator (Adjunkt)"
     },
     {
-        "Hofamt": "Hofkammersekret\u00e4r"
+        "ID": "HKaSek",
+        "NAME": "Hofkammersekret\u00e4r"
     },
     {
-        "Hofamt": "Hofkammeruntersekret\u00e4r"
+        "ID": "HKaSekU",
+        "NAME": "Hofkammeruntersekret\u00e4r"
     },
     {
-        "Hofamt": "Hofkammervizepr\u00e4sident"
+        "ID": "HKaVP",
+        "NAME": "Hofkammervizepr\u00e4sident"
     },
     {
-        "Hofamt": "Oberstmustermeister"
+        "ID": "HKrOMM",
+        "NAME": "Oberstmustermeister"
     },
     {
-        "Hofamt": "Hofkriegsratspr\u00e4sident"
+        "ID": "HKrP",
+        "NAME": "Hofkriegsratspr\u00e4sident"
     },
     {
-        "Hofamt": "Hofquartiermeister"
+        "ID": "HKrQM",
+        "NAME": "Hofquartiermeister"
     },
     {
-        "Hofamt": "Hofkriegsrat"
+        "ID": "HKrR",
+        "NAME": "Hofkriegsrat"
     },
     {
-        "Hofamt": "Hofkriegsratssekret\u00e4r"
+        "ID": "HKrSek",
+        "NAME": "Hofkriegsratssekret\u00e4r"
     },
     {
-        "Hofamt": "Untermustermeister"
+        "ID": "HKrUMM",
+        "NAME": "Untermustermeister"
     },
     {
-        "Hofamt": "Hofkriegsratsvizepr\u00e4sident"
+        "ID": "HKrVP",
+        "NAME": "Hofkriegsratsvizepr\u00e4sident"
     },
     {
-        "Hofamt": "Hofkriegszahlmeister"
+        "ID": "HKrZM",
+        "NAME": "Hofkriegszahlmeister"
     },
     {
-        "Hofamt": "Hofkontrolleur"
+        "ID": "HKt",
+        "NAME": "Hofkontrolleur"
     },
     {
-        "Hofamt": "Hofpfennigmeister"
+        "ID": "HPfenM",
+        "NAME": "Hofpfennigmeister"
     },
     {
-        "Hofamt": "Hofpostmeister"
+        "ID": "HPostM",
+        "NAME": "Hofpostmeister"
     },
     {
-        "Hofamt": "Hofpostmeister (Amtsverwalter)"
+        "ID": "HPostMX",
+        "NAME": "Hofpostmeister (Amtsverwalter)"
     },
     {
-        "Hofamt": "Hofrat"
+        "ID": "HR",
+        "NAME": "Hofrat"
     },
     {
-        "Hofamt": "Huschier"
+        "ID": "Hs",
+        "NAME": "Huschier"
     },
     {
-        "Hofamt": "Hofvizekanzler"
+        "ID": "HVC",
+        "NAME": "Hofvizekanzler"
     },
     {
-        "Hofamt": "Hofzahlamtskontrolleur"
+        "ID": "HZKt",
+        "NAME": "Hofzahlamtskontrolleur"
     },
     {
-        "Hofamt": "Hofzahlmeister"
+        "ID": "HZM",
+        "NAME": "Hofzahlmeister"
     },
     {
-        "Hofamt": "K\u00e4mmerer"
+        "ID": "K",
+        "NAME": "K\u00e4mmerer"
     },
     {
-        "Hofamt": "K\u00e4mmerer (unwirklich)"
+        "ID": "K0",
+        "NAME": "K\u00e4mmerer (unwirklich)"
     },
     {
-        "Hofamt": "Kammerdiener"
+        "ID": "Kd",
+        "NAME": "Kammerdiener"
     },
     {
-        "Hofamt": "Leibwarterin"
+        "ID": "Lwin",
+        "NAME": "Leibwarterin"
     },
     {
-        "Hofamt": "Hofmathematiker"
+        "ID": "Math",
+        "NAME": "Hofmathematiker"
     },
     {
-        "Hofamt": "Hofarzt"
+        "ID": "Med",
+        "NAME": "Hofarzt"
     },
     {
-        "Hofamt": "Mundschenk"
+        "ID": "Ms",
+        "NAME": "Mundschenk"
     },
     {
-        "Hofamt": "Oberstfalkenmeister"
+        "ID": "OFalkM",
+        "NAME": "Oberstfalkenmeister"
     },
     {
-        "Hofamt": "Obersthofmeister"
+        "ID": "OHM",
+        "NAME": "Obersthofmeister"
     },
     {
-        "Hofamt": "Obersthofmarschall"
+        "ID": "OHMar",
+        "NAME": "Obersthofmarschall"
     },
     {
-        "Hofamt": "Obersthofmeisterin"
+        "ID": "OHMin",
+        "NAME": "Obersthofmeisterin"
     },
     {
-        "Hofamt": "Obersthofmeister (Amtsverwalter)"
+        "ID": "OHMX",
+        "NAME": "Obersthofmeister (Amtsverwalter)"
     },
     {
-        "Hofamt": "Oberstj\u00e4germeister"
+        "ID": "OJM",
+        "NAME": "Oberstj\u00e4germeister"
     },
     {
-        "Hofamt": "Oberstk\u00e4mmerer"
+        "ID": "OK",
+        "NAME": "Oberstk\u00e4mmerer"
     },
     {
-        "Hofamt": "Oberstk\u00fcchenmeister"
+        "ID": "OK\u00fcM",
+        "NAME": "Oberstk\u00fcchenmeister"
     },
     {
-        "Hofamt": "Oberstsilberk\u00e4mmerer"
+        "ID": "OSilK",
+        "NAME": "Oberstsilberk\u00e4mmerer"
     },
     {
-        "Hofamt": "Oberstsilberk\u00e4mmerer (Amtsverwalter)"
+        "ID": "OSilKX",
+        "NAME": "Oberstsilberk\u00e4mmerer (Amtsverwalter)"
     },
     {
-        "Hofamt": "Oberststallmeister"
+        "ID": "OStallM",
+        "NAME": "Oberststallmeister"
     },
     {
-        "Hofamt": "St\u00e4belmeister"
+        "ID": "OTs",
+        "NAME": "St\u00e4belmeister"
     },
     {
-        "Hofamt": "Unterst\u00e4belmeister"
+        "ID": "OTsU",
+        "NAME": "Unterst\u00e4belmeister"
     },
     {
-        "Hofamt": "Panetier"
+        "ID": "Pt",
+        "NAME": "Panetier"
     },
     {
-        "Hofamt": "Rat"
+        "ID": "R",
+        "NAME": "Rat"
     },
     {
-        "Hofamt": "Reichskanzleisekret\u00e4r"
+        "ID": "RCSek",
+        "NAME": "Reichskanzleisekret\u00e4r"
     },
     {
-        "Hofamt": "Reichshoffiskal"
+        "ID": "RHF",
+        "NAME": "Reichshoffiskal"
     },
     {
-        "Hofamt": "Reichshofratspr\u00e4sident"
+        "ID": "RHP",
+        "NAME": "Reichshofratspr\u00e4sident"
     },
     {
-        "Hofamt": "Reichshofrat"
+        "ID": "RHR",
+        "NAME": "Reichshofrat"
     },
     {
-        "Hofamt": "Reichshofratssekret\u00e4r"
+        "ID": "RHSek",
+        "NAME": "Reichshofratssekret\u00e4r"
     },
     {
-        "Hofamt": "Reichshofratsvizepr\u00e4sident"
+        "ID": "RHVP",
+        "NAME": "Reichshofratsvizepr\u00e4sident"
     },
     {
-        "Hofamt": "Schatzmeister"
+        "ID": "SM",
+        "NAME": "Schatzmeister"
     },
     {
-        "Hofamt": "Sommelier"
+        "ID": "So",
+        "NAME": "Sommelier"
     },
     {
-        "Hofamt": "Trabantenhauptmann"
+        "ID": "TraHM",
+        "NAME": "Trabantenhauptmann"
     },
     {
-        "Hofamt": "Truchsess"
+        "ID": "Ts",
+        "NAME": "Truchsess"
     },
     {
-        "Hofamt": "Untermarschall"
+        "ID": "UHMar",
+        "NAME": "Untermarschall"
     },
     {
-        "Hofamt": "Untersilberk\u00e4mmerer"
+        "ID": "USilK",
+        "NAME": "Untersilberk\u00e4mmerer"
     },
     {
-        "Hofamt": "Vogelj\u00e4ger"
+        "ID": "VJ",
+        "NAME": "Vogelj\u00e4ger"
     }
 ]

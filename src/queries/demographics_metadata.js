@@ -1,17 +1,13 @@
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterForCourt, filterKnownBirths, filterKnownDeaths, filterCertainDateOfBirths, filterCertainDateOfDeaths, filterKnownBirthPlaces, filterKnownDeathPlaces, filterCompleteDateOfBirths, filterCompleteDateOfDeaths, filterIncompleteDateOfBirths, filterIncompleteDateOfDeaths, filterUnknownBirthPlaces, filterUnknownDeathPlaces } from './filterFunctions';
+import { filterPersonForCourt, filterKnownBirths, filterKnownDeaths, filterCertainDateOfBirths, filterCertainDateOfDeaths, filterCompleteDateOfBirths, filterCompleteDateOfDeaths, filterIncompleteDateOfBirths, filterIncompleteDateOfDeaths } from './filterFunctions';
 
-const exactDoB = 'genaues Geburtsdatum';
+const exactDoB = 'vollständiges Geburtsdatum';
 const unknownDoB = 'unbekanntes Geburtsdatum';
-const knownPoB = 'bekannter Geburtsort';
-const unknownPoB = 'unbekannter Geburtsort';
 const uncertainDoB = 'ungenaues Geburtsdatum';
 const incompleteDoB = 'unvollständiges Geburtsdatum';
-const exactDoD = 'genaues Todesdatum';
+const exactDoD = 'vollständiges Todesdatum';
 const unknownDoD = 'unbekanntes Todesdatum';
-const knownPoD = 'bekannter Todesort'; 
-const unknownPoD = 'unbekannter Todesort';
 const uncertainDoD = 'ungenaues Todesdatum';
 const incompleteDoD = 'unvollständiges Todesdatum';
 
@@ -20,14 +16,10 @@ const queries = [
   incompleteDoB,
   uncertainDoB,
   unknownDoB,
-  knownPoB,
-  unknownPoB,
   exactDoD,
   incompleteDoD,
   uncertainDoD,
   unknownDoD,
-  knownPoD,
-  unknownPoD,
 ]
 
 const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
@@ -43,7 +35,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
         name: 'Hofstaat',
         listOfItems: kaiser,
         field: 'NAME',
-        initialValue: kaiser[0],
+        initialValue: kaiser[1],
         setter: (value) => {
           setKaiserIDMethod(value.ID)
           setParamTwo(value)
@@ -53,8 +45,8 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
     hasHofstaat: true,
     compare: true,
     title: (category, court) => titleFunction(court, category),
-    data: (category, court) => metaheuristics(court, category),
-    name: `Metadaten`,
+    data: (category, court) => metadata(court, category),
+    name: `Demographie - Metadaten`,
   })
 }
 
@@ -62,16 +54,12 @@ const titleFunction = (court, category) => {
   let descriptor;
 
   switch (category) {
-    case exactDoB: descriptor = 'mit genauem Geburtsdatum'; break;
-    case exactDoD: descriptor = 'mit genauem Todesdatum'; break;
-    case knownPoB: descriptor = 'mit bekanntem Geburtsort'; break;
-    case knownPoD: descriptor = 'mit bekanntem Todesort'; break;
+    case exactDoB: descriptor = 'mit vollständigem Geburtsdatum'; break;
+    case exactDoD: descriptor = 'mit vollständigem Todesdatum'; break;
     case unknownDoB: descriptor = 'mit unbekanntem Geburtsdatum'; break;
     case unknownDoD: descriptor = 'mit unbekanntem Todesdatum'; break;
     case uncertainDoB: descriptor = 'mit ungenauem Geburtsdatum'; break;
     case uncertainDoD: descriptor = 'mit ungenauem Todesdatum'; break;
-    case unknownPoB: descriptor = 'mit unbekanntem Geburtsort'; break;
-    case unknownPoD: descriptor = 'mit unbekanntem Todesort'; break;
     case incompleteDoB: descriptor = 'mit unvollständigem Geburtsdatum'; break;
     case incompleteDoD: descriptor = 'mit unvollständigem Todesdatum'; break;
     default: throw new Error('Unknown category in titleFunction of metaheuristics query');
@@ -80,11 +68,11 @@ const titleFunction = (court, category) => {
   return `Höflinge im Hofstaat ${court} ${descriptor}`;
 }
 
-const metaheuristics = (court, category) => {
+const metadata = (court, category) => {
   let total = personen
-    .filter(filterForCourt(court))
+    .filter(filterPersonForCourt(court))
   let totalVal = total.length;
-  let persons = personen.filter(filterForCourt(court));
+  let persons = personen.filter(filterPersonForCourt(court));
 
   let min = parseInt(court.start.substring(0, 4));
   let max = parseInt(court.end.substring(0, 4));
@@ -100,12 +88,8 @@ const metaheuristics = (court, category) => {
     case unknownDoD: persons = persons.filter(filterKnownDeaths); break;
     case uncertainDoB: persons = persons.filter(filterCertainDateOfBirths); break;
     case uncertainDoD: persons = persons.filter(filterCertainDateOfDeaths); break;
-    case unknownPoB: persons = persons.filter(filterKnownBirthPlaces); break;
-    case unknownPoD: persons = persons.filter(filterKnownDeathPlaces); break;
     case incompleteDoB: persons = persons.filter(filterCompleteDateOfBirths); break;
     case incompleteDoD: persons = persons.filter(filterCompleteDateOfDeaths); break;
-    case knownPoB: persons = persons.filter(filterUnknownBirthPlaces); break;
-    case knownPoD: persons = persons.filter(filterUnknownDeathPlaces); break;
     default: throw new Error('Unknown category in data function of metaheuristics query');
   }
 

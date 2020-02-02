@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, } from 'react';
 import useDimensions from "react-use-dimensions";
 import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container, Link } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, } from 'react-vis';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, LineSeries, LineMarkSeries, DiscreteColorLegend } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
@@ -31,7 +31,7 @@ function App() {
   const [start, end] = [1503, 1705];
   const [blue, red] = ['#2699FB', '#B80F0A'];
 
-  const { height } = useWindowSize();
+  const { height, width } = useWindowSize();
   const [header, headerSize] = useDimensions();
   const [toolbar, toolbarSize] = useDimensions();
   const [title, titleSize] = useDimensions();
@@ -228,10 +228,18 @@ function App() {
   }
 
   const guiHeight = () => {
+    let guiHeight;
     if (height && titleSize.height && headerSize.height && toolbarSize.height) {
-      return height - (titleSize.height + headerSize.height + toolbarSize.height);
+      guiHeight = height - (titleSize.height + headerSize.height + toolbarSize.height);
+    } else {
+      guiHeight = height - 210;
     }
-    return height - 210;
+    console.log(guiHeight);
+    
+    // if (graphData.additional && paramCompare === '') {
+    //   guiHeight + 
+    // }
+    return guiHeight;
   }
 
   if (!paramOne || !paramTwo) {
@@ -243,7 +251,10 @@ function App() {
       <AppBar ref={header} position="static" style={{ color: '#ffffff' }}>
         <Toolbar>
           <Typography variant="h4" className={classes.title} style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic' }} >
-            PROJECT TIMELINE: Ein <Link style={{color: '#fffa'}} rel='external' href="http://kaiserhof.geschichte.lmu.de/">Kaiser und Höfe</Link> Visualisierungs-Projekt
+            {width < 1000
+            ? <React.Fragment>PROJECT TIMELINE</React.Fragment>
+            : <React.Fragment>PROJECT TIMELINE: Ein <Link style={{color: '#fffa'}} rel='external' href="http://kaiserhof.geschichte.lmu.de/">Kaiser und Höfe</Link> Visualisierungs-Projekt</React.Fragment>}
+            
         </Typography>
         </Toolbar>
       </AppBar>
@@ -261,10 +272,11 @@ function App() {
                 onChange={(event) => {
                   setSelectedQueryIndex(event.target.value);
                   setComparingKaiser(false);
-                  setSelectedKaiserID(initialKaiser);
                   setParamCompare("");
-                  setParamOne(queries[event.target.value].params[0].initialValue);
-                  setParamTwo(queries[event.target.value].params[1].initialValue);
+                  // setParamOne(queries[event.target.value].params[0].initialValue);
+                  // setParamTwo(queries[event.target.value].params[1].initialValue);
+                  queries[event.target.value].params[0].setter(queries[event.target.value].params[0].initialValue);
+                  queries[event.target.value].params[1].setter(queries[event.target.value].params[1].initialValue);
                 }}
               >
                 {queries.map((item, index) => {
@@ -368,7 +380,7 @@ function App() {
         height={guiHeight() * 0.7}
         yDomain={[0, maximum()]}
         xDomain={range()}
-        margin={{left: 40, right: 10, top: 10, bottom: 20}}
+        margin={{left: 40, right: 10, top: graphData.additional ? 72 : 10, bottom: 20}}
         animation={true}
         onMouseLeave={() => setCrossHairValues(null)}
       >
@@ -376,13 +388,15 @@ function App() {
         <GradientDefs>
           <linearGradient id="blueGradient" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor={blue} stopOpacity={0.8} />
-            <stop offset="100%" stopColor={blue} stopOpacity={0.0} />
+            <stop offset="100%" stopColor={blue} stopOpacity={0.2} />
           </linearGradient>
           <linearGradient id="redGradient" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor={red} stopOpacity={0.8} />
-            <stop offset="100%" stopColor={red} stopOpacity={0.0} />
+            <stop offset="100%" stopColor={red} stopOpacity={0.2} />
           </linearGradient>
         </GradientDefs>
+
+
         {crossHairValues !== null
           ? <Crosshair style={{ line: { background: '#000', width: '2px' } }} values={crossHairValues} >
             <div style={{display: 'inline-block'}}>
@@ -432,8 +446,8 @@ function App() {
           hideLine tickSize={0}
         />
 
-
         <HorizontalGridLines style={maximum() > 5 ? {strokeOpacity: 1} : {strokeOpacity: 0}} />
+
 
         {graphCompareData !== null && graphCompareData.total
         ? <AreaSeries fill={'#fff0'} stroke={red} data={graphCompareData.total} curve={'curveBasis'} />
@@ -441,7 +455,7 @@ function App() {
         }
 
         {graphCompareData !== null
-        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph} curve={'curveBasis'} />
+        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph.map(e => {return{x: e.x, y: e.y}})} curve={'curveBasis'} />
         : null }
 
         {graphData.total
@@ -449,18 +463,25 @@ function App() {
         : null
         }
 
+        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph.map(e => {return({x: e.x,y: e.y})})} curve={'curveBasis'} />
 
-        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph} curve={'curveBasis'} />
+        {graphData.additional && paramCompare === ''
+        ? graphData.additional.map((_, idx) => [
+          <LineSeries strokeWidth={'4px'} stroke={blue} data={graphData.graph.map(e => {return({x: e.x, y: e['y' + idx]})})} strokeDasharray={(idx + 1) * 2} curve={'curveBasis'} />,
+        ])
+        : null}
+
+        {graphData.additional && paramCompare === ''
+        ? <DiscreteColorLegend style={{display: 'inline-block', position: 'absolute', left: '50%', top: '0px', transform: 'translate(-50%, 0)'}} orientation='horizontal' items={graphData.additional.map((d, idx) => {return({title: d, color: blue, strokeWidth: '4px', strokeDasharray: ((idx + 1) * 2).toString()})})} />
+        : null}
 
         <HorizontalRectSeries data={getRange(range()[0], range()[1]).map(i => {return({x: i, x0: i, y: 0, y0: maximum()})})} stroke='#0000' fill='#0000' onNearestX={hovered} />
 
-        {/* {console.log(personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])}))}
-        <LineMarkSeries
-        curve={'curveMonotoneX'}
-        data={
-          personen.slice(0, 8).map((value, idx) => {return ([{x: parseInt(value.Geburtsdatum.substring(0,4)), y:idx}, {x: parseInt(value.Todesdatum.substring(0,4)), y:idx}])})
-          }
-      /> */}
+        {/* {
+          graphData.persons[1550].map((person, idx) => <LineMarkSeries key={person.ID} data={
+            [{x: parseInt(person.Geburtsdatum.substring(0,4)), y: idx}, {x: parseInt(person.Todesdatum.substring(0,4)), y: idx}]} />)
+        } */}
+
 
       </FlexibleWidthXYPlot>
       <FlexibleWidthXYPlot

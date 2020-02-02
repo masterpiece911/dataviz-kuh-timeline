@@ -1,11 +1,11 @@
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterForCourt, filterUnknownBirths, filterUnknownDeaths } from './filterFunctions';
-import { start, end } from './definitions';
+import { filterPersonForCourt, filterUnknownBirths, filterUnknownDeaths } from './filterFunctions';
 
 const anzErfassterPers = 'Anzahl erfasster Höflinge';
 // const avgAge = 'Durchschnittsalter';
 const avgReachedAge = 'durchschnittlich erreichtes Alter';
+const avgAgePerYear = 'durchschnittliches Alter';
 
 
 const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
@@ -15,7 +15,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
         name: `Filter`,
         listOfItems: [
           anzErfassterPers,
-          // avgAge,
+          // avgAgePerYear,
           avgReachedAge,
         ],
         initialValue: avgReachedAge,
@@ -25,7 +25,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
         name: 'Hofstaat',
         listOfItems: kaiser,
         field: 'NAME',
-        initialValue: kaiser[0],
+        initialValue: kaiser[1],
         setter: (value) => {
           setKaiserIDMethod(value.ID)
           setParamTwo(value)
@@ -48,14 +48,14 @@ const demographicsData = (category, court) => {
 
   let persons;
   if (category === anzErfassterPers) {
-    persons = personen.filter(filterForCourt(court));
+    persons = personen.filter(filterPersonForCourt(court));
     let yearObject = {};
     let yearArray = [];
     let maxVal = 0;
     let min = parseInt(court.start.substring(0, 4));
     let max = parseInt(court.end.substring(0, 4));
     for (let year = min; year <= max; year += 1) {
-      yearObject[year] = persons.filter((person) => person.Geburtsdatum <= year && year <= person.Todesdatum);
+      yearObject[year] = persons.filter((person) => person.DATEOFBIRTH <= year && year <= person.DATEOFDEATH);
       if (maxVal < yearObject[year].length) {
         maxVal = yearObject[year].length;
       }
@@ -66,44 +66,15 @@ const demographicsData = (category, court) => {
 
   }
 
-  // if (category === avgAge) {
-  //   persons = personen
-  //     .filter(filterForCourt(court))
-  //     .filter(filterUnknownBirths)
-  //     .filter(filterUnknownDeaths)
-  //     .map((person) => {
-  //       person['yearOfBirth'] = parseInt(person.Geburtsdatum.substring(0, 4));
-  //       person['yearOfDeath'] = parseInt(person.Todesdatum.substring(0, 4));
-  //       return person;
-  //     });
-
-  //   let yearObject = {};
-  //   let yearArray = [];
-  //   let maxVal = 0;
-  //   let sum = 0;
-  //   let val = 0;
-  //   for (let year = start; year <= end; year += 1) {
-  //     yearObject[year] = persons.filter((person) => person.yearOfBirth <= year && year <= person.yearOfDeath);
-  //     sum = yearObject[year].reduce((prev, person) => { return (prev + year - person.yearOfBirth) }, 0);
-  //     val = sum / yearObject[year].length;
-  //     if (isNaN(val)) {
-  //       val = 0;
-  //     }
-  //     if (maxVal < val) {
-  //       maxVal = val;
-  //     }
-  //     yearArray.push({ x: year, y: val });
-  //   }
-  //   return { persons: yearObject, graph: yearArray, max: maxVal };
-  // }
   if (category === avgReachedAge) {
+    
     persons = personen
-      .filter(filterForCourt(court))
+      .filter(filterPersonForCourt(court))
       .filter(filterUnknownBirths)
       .filter(filterUnknownDeaths)
       .map((person) => {
-        person['yearOfBirth'] = parseInt(person.Geburtsdatum.substring(0, 4));
-        person['yearOfDeath'] = parseInt(person.Todesdatum.substring(0, 4));
+        person['yearOfBirth'] = parseInt(person.DATEOFBIRTH.substring(0, 4));
+        person['yearOfDeath'] = parseInt(person.DATEOFDEATH.substring(0, 4));
         return person;
       });
 
@@ -130,41 +101,52 @@ const demographicsData = (category, court) => {
     return { persons: yearObject, graph: yearArray, max: maxVal };
   }
 
-  if (category === "Anzahl der Geburten") {
+  // if (category === avgAgePerYear) {
 
-    let yearObject = {};
-    let yearArray = [];
-    let maxVal = 0;
-    let sum = 0;
-    for (let year = start; year <= end; year += 1) {
-      yearObject[year] = personen.filter(person => (person.Geburtsdatum.substring(0, 4) === year));
-      sum = yearObject[year].length;
-      if (maxVal < sum) {
-        maxVal = sum;
-      }
-      yearArray.push({ x: year, y: sum });
-    }
-    return { persons: yearObject, graph: yearArray, max: maxVal };
-  }
-  if (category === "Anzahl der Tode") {
-    let yearObject = {};
-    let yearArray = [];
-    let maxVal = 0;
-    let sum = 0;
-    for (let year = start; year <= end; year += 1) {
-      yearObject[year] = personen.filter(person => (person.Todesdatum.substring(0, 4) === year));
-      sum = yearObject[year].length;
-      if (maxVal < sum) {
-        maxVal = sum;
-      }
-      yearArray.push({ x: year, y: sum });
-    }
-    return { persons: yearObject, graph: yearArray, max: maxVal };
-  }
+  //   persons = personen
+  //     .filter(filterPersonForCourt(court))
+  //     .filter(filterUnknownBirths)
+  //     .filter(filterUnknownDeaths)
+  //     .map((person) => {
+  //       person['yearOfBirth'] = parseInt(person.DATEOFBIRTH.substring(0,4));
+  //       person['yearOfDeath'] = parseInt(person.DATEOFDEATH.substring(0,4));
+  //       return person;
+  //     });
+
+  //     let yearObject = {};
+  //     let yearArray = [];
+  //     let maxVal = 0;
+  //     let sum = 0;
+  //     let val = 0;
+  //     let min = parseInt(court.start.substring(0, 4));
+  //     let max = parseInt(court.end.substring(0, 4));
+
+  //     const isAlive = (year) => (person) => person.yearOfBirth <= year && year <= person.yearOfDeath;
+
+  //     for (let year = min; year <= max; year += 1) {
+  //       yearObject[year] = persons.filter(isAlive(year));
+  //       console.log('year', year, yearObject[year]);
+        
+  //       sum = yearObject[year].reduce((prev, person) => { return(prev + year - person.yearOfBirth)}, 0);
+  //       console.log('sum', sum);
+        
+  //       val = sum / yearObject[year].length;
+  //       if (isNaN(val)) {
+  //         val = 0;
+  //       }
+  //       console.log('val', val);
+        
+  //       if (maxVal < val) {
+  //         maxVal = val;
+  //       }
+  //       yearArray.push({x: year, y: val});
+  //     }
+  //     return { persons: yearObject, graph: yearArray, max: maxVal} ;
+
+  // }
 
   throw new Error("INVALID PARAMETER IN DEMOGRAPHICS QUERY");
 
 }
-
 
 export default query;
