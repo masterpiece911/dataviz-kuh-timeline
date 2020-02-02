@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d9864d4f8608ff96dd2e4d6193e94dc6",
+    "revision": "8777151f0c98c6139c06befb93e1532b",
     "url": "/dataviz-kuh-timeline/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dataviz-kuh-timeline/static/css/2.5a2f7233.chunk.css"
   },
   {
-    "revision": "19200dbf04f6a45e7329",
+    "revision": "99c3a7601789e437df0f",
     "url": "/dataviz-kuh-timeline/static/css/main.69eda509.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dataviz-kuh-timeline/static/js/2.09c0ab37.chunk.js.LICENSE"
   },
   {
-    "revision": "19200dbf04f6a45e7329",
-    "url": "/dataviz-kuh-timeline/static/js/main.df1ad354.chunk.js"
+    "revision": "99c3a7601789e437df0f",
+    "url": "/dataviz-kuh-timeline/static/js/main.12329dcb.chunk.js"
   },
   {
     "revision": "975d7bbda1ea4c7761a0",
