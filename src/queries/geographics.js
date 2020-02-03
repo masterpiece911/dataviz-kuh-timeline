@@ -1,10 +1,13 @@
 import { Orte } from '../data/orte';
 import { personen } from '../data/personen';
 import { start, end } from './definitions';
+import { filterUnknownDeathPlaces, filterUnknownBirthPlaces } from './filterFunctions';
 
 
 const diedIn = 'Todesort';
 const bornIn = 'Geburtsort';
+const start = 1503;
+const end = 1705;
 
 const query = (setParamOne, setParamTwo) => {
     return ({
@@ -32,12 +35,13 @@ const query = (setParamOne, setParamTwo) => {
 }
 
 const titleFunction = (category, place) => {
-    switch(category) {
+    switch (category) {
         case diedIn:
             return `Höflinge verstorben in ${place}`
         case bornIn:
             return `Höflinge, aus ${place} abstammend`
-        default: throw new Error('unknown category in titleFunction of geographics query');
+        default:
+            throw new Error('unknown category in titleFunction of geographics query');
     }
 }
 
@@ -47,6 +51,7 @@ const geographicalData = (category, place) => {
     // TODO
     if (category === diedIn) {
         persons = personen
+            .filter(filterUnknownDeathPlaces)
             .map((person) => {
                 person['placeOfDeath'] = person.Sterbeort;
                 return person;
@@ -57,6 +62,7 @@ const geographicalData = (category, place) => {
         let yearArray = [];
         let maxVal = 0;
         let val = 0;
+
         for (let year = start; year <= end; year += 1) {
             yearObject[year] = persons.filter((person) => person.placeOfDeath === place.Ort);
             val = yearObject[year].length;
@@ -72,6 +78,7 @@ const geographicalData = (category, place) => {
     }
     if (category === bornIn) {
         persons = personen
+            .filter(filterUnknownBirthPlaces)
             .map((person) => {
                 person['placeOfBirth'] = person.Geburtsort;
                 return person;
