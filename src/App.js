@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo, } from 'react';
 import useDimensions from "react-use-dimensions";
-import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container, Link } from '@material-ui/core';
-import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, LineSeries, LineMarkSeries, DiscreteColorLegend } from 'react-vis';
+import { Typography, AppBar, Toolbar, InputLabel, FormControl, Select, MenuItem, Grid, Box, Container, Link, IconButton, Popover } from '@material-ui/core';
+import { XAxis, AreaSeries, YAxis, HorizontalRectSeries, GradientDefs, FlexibleWidthXYPlot, Crosshair, LabelSeries, HorizontalGridLines, LineSeries,  DiscreteColorLegend } from 'react-vis';
 import { makeStyles } from '@material-ui/core/styles';
 import '../node_modules/react-vis/dist/style.css';
 import useWindowSize from 'react-use/lib/useWindowSize';
+import HelpIcon from '@material-ui/icons/Help';
 
 import { kaiser, initialKaiser, getPositionOfKaisersInRange, getMaxColumnInRange } from './data/kaiser';
 import { queries as queryDefinitions } from './data/queryDefinitions';
@@ -35,6 +36,8 @@ function App() {
   const [header, headerSize] = useDimensions();
   const [toolbar, toolbarSize] = useDimensions();
   const [title, titleSize] = useDimensions();
+
+  const [popupAnchorEl, setPopupAnchorEl] = useState(null);
 
   const [crossHairValues, setCrossHairValues] = useState(null);
   const [selectedKaiserID, setSelectedKaiserID] = useState(initialKaiser);
@@ -227,6 +230,20 @@ function App() {
     }
   }
 
+  const handleHelpClicked = event => {
+    setPopupAnchorEl(event.currentTarget);
+    if (open) {
+      helpClosed();
+    }
+  }
+
+  const helpClosed = () => {
+    setPopupAnchorEl(null);
+  }
+
+  const open = Boolean(popupAnchorEl);
+  const popupId = open ? 'help-popover' : undefined;
+
   const guiHeight = () => {
     let guiHeight;
     if (height && titleSize.height && headerSize.height && toolbarSize.height) {
@@ -372,7 +389,9 @@ function App() {
         </Grid>
       </Container>
       <Box ref={title} fontSize="2.5rem" style={{ fontFamily: 'futura-pt, sans-serif', fontWeight: 700, fontStyle: 'italic', textAlign: 'center', }}>
-        <span style={{color: blue }}>{makeTitle()}</span><span style={{color: red}}>{makeCompareTitle()}</span>
+        <span style={{color: blue }}>{makeTitle()}</span><span style={{color: red}}>{makeCompareTitle()}
+          <IconButton onClick={handleHelpClicked}><HelpIcon color='primary' /><Popover disableBackdropClick={false} id={popupId} open={open} anchorEl={popupAnchorEl} onClose={helpClosed} anchorOrigin={{vertical: 'center', horizontal: 'center'}} transformOrigin={{vertical: 'top', horizontal:'center'}}><Box p={2} style={{maxWidth: "30vw"}}><Typography>{queries[selectedQueryIndex].descriptor(paramOne, paramTwo)}</Typography></Box></Popover></IconButton> 
+        </span>
       </Box>
 
 

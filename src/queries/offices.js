@@ -29,9 +29,14 @@ const query = (setParamOne, setParamTwo, setKaiserID) => {
         hasHofstaat: true,
         compare: true,
         title: (office, court) => `Anzahl ${office} im Hofstaat von ${court}`,
+        descriptor: (office, court) => descriptorFunction(office, court),
         data: (office, court) => { return officeData(office, court) },
         name: `Amt`
     })
+}
+
+const descriptorFunction = (office, court) => {
+    return `Der Graph zeigt an, wie viele Höflinge das ausgewählte Amt am ausgewählten Hofstaat ausgeübt haben. Da Informationen zu Dienstbeginn und Abraitung sehr unvollständig sind wird der Graph anteilig durch Linien unterteilt, welche angeben, welche Daten unvollständig sind.`
 }
 
 const officeData = (office, court) => {

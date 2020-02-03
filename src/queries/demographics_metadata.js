@@ -45,6 +45,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
     hasHofstaat: true,
     compare: true,
     title: (category, court) => titleFunction(court, category),
+    descriptor: (category, court) => descriptionFunction(category, court),
     data: (category, court) => metadata(court, category),
     name: `Demographie - Metadaten`,
   })
@@ -66,6 +67,10 @@ const titleFunction = (court, category) => {
   }
 
   return `Höflinge im Hofstaat ${court} ${descriptor}`;
+}
+
+const descriptionFunction = (category, court) => {
+  return `Der Graph zeigt, anteilig, wie genaue Informationen zum Geburts- oder Todesdatum und -ort vorhanden sind. Ein vollständiges Datum bedeutet Jahr, Tag und Monat sind vorhanden. Ein ungenaues Datum bedeutet, dass im Datumsfeld ein Tilde-Symbol '~' gefunden wurde. Ein leeres Datumsfeld ist als unbekannt bezeichnet.`
 }
 
 const metadata = (court, category) => {

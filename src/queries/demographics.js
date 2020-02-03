@@ -3,9 +3,7 @@ import { personen } from '../data/personen';
 import { filterPersonForCourt, filterUnknownBirths, filterUnknownDeaths } from './filterFunctions';
 
 const anzErfassterPers = 'Anzahl erfasster Höflinge';
-// const avgAge = 'Durchschnittsalter';
 const avgReachedAge = 'durchschnittlich erreichtes Alter';
-const avgAgePerYear = 'durchschnittliches Alter';
 
 
 const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
@@ -35,6 +33,7 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
     hasHofstaat: true,
     compare: true,
     title: (category, court) => titleFunction(category, court),
+    descriptor: (category, court) => descriptorFunction(category, court),
     data: (category, court) => demographicsData(category, court),
     name: `Demographie`,
   })
@@ -42,6 +41,13 @@ const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
 
 const titleFunction = (category, court) => {
   return `${category} im Hofstaat ${court}`;
+}
+
+const descriptorFunction = (category, court) => {
+  if (category === anzErfassterPers) {
+    return ('In dem Graphen wurden nur Höflinge verzeichnet, deren Geburtsdatum - oder Todesdatum mindestens das Jahr aufweist - folglich sind Höflinge ohne bekanntes Geburts - oder Todesdatum nicht in diesem Graphen berücksichtigt. Für die Anzahl erfasster Personen wurde jedes Jahr überprüft, ob eine Person eines Hofstaats in diesem Jahr am Leben war. Selbstverständlich müssten Dienstbeginn und Abraitungen auch berücksichtigt werden, jedoch sind Informationen über diese unvollständig.' )
+  }
+  return ('In dem Graphen wurden nur Höflinge verzeichnet, deren Geburtsdatum - oder Todesdatum mindestens ein Jahr aufweist - folglich sind Höflinge ohne bekanntes Geburts - oder Todesdatum nicht in diesem Graphen berücksichtigt. Das durchschnittlich erreichte Alter pro Jahr ist das durchschnittliche Alter aller Höflinge, welche in diesem Jahr am Leben gewesen sind. Ob diese Höflinge zu dieser Zeit auch am Hof gedient haben, ist leider aufgrund der sehr unvollständigen Informationen zum Dienstbeginn oder der Abraitung einzelner Höflinge nicht berücksichtigt worden.')
 }
 
 const demographicsData = (category, court) => {
@@ -100,50 +106,6 @@ const demographicsData = (category, court) => {
     }
     return { persons: yearObject, graph: yearArray, max: maxVal };
   }
-
-  // if (category === avgAgePerYear) {
-
-  //   persons = personen
-  //     .filter(filterPersonForCourt(court))
-  //     .filter(filterUnknownBirths)
-  //     .filter(filterUnknownDeaths)
-  //     .map((person) => {
-  //       person['yearOfBirth'] = parseInt(person.DATEOFBIRTH.substring(0,4));
-  //       person['yearOfDeath'] = parseInt(person.DATEOFDEATH.substring(0,4));
-  //       return person;
-  //     });
-
-  //     let yearObject = {};
-  //     let yearArray = [];
-  //     let maxVal = 0;
-  //     let sum = 0;
-  //     let val = 0;
-  //     let min = parseInt(court.start.substring(0, 4));
-  //     let max = parseInt(court.end.substring(0, 4));
-
-  //     const isAlive = (year) => (person) => person.yearOfBirth <= year && year <= person.yearOfDeath;
-
-  //     for (let year = min; year <= max; year += 1) {
-  //       yearObject[year] = persons.filter(isAlive(year));
-  //       console.log('year', year, yearObject[year]);
-        
-  //       sum = yearObject[year].reduce((prev, person) => { return(prev + year - person.yearOfBirth)}, 0);
-  //       console.log('sum', sum);
-        
-  //       val = sum / yearObject[year].length;
-  //       if (isNaN(val)) {
-  //         val = 0;
-  //       }
-  //       console.log('val', val);
-        
-  //       if (maxVal < val) {
-  //         maxVal = val;
-  //       }
-  //       yearArray.push({x: year, y: val});
-  //     }
-  //     return { persons: yearObject, graph: yearArray, max: maxVal} ;
-
-  // }
 
   throw new Error("INVALID PARAMETER IN DEMOGRAPHICS QUERY");
 
