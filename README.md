@@ -1,1 +1,1 @@
-zum Ausführen bitte npm start im root-Ordner starten.
+Das Projekt ist auf https://masterpiece911.github.io/dataviz-kuh-timeline/ gehostet.
