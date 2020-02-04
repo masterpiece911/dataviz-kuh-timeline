@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dataviz-kuh-timeline/static/css/main.69eda509.chunk.css",
-    "main.js": "/dataviz-kuh-timeline/static/js/main.92592ca9.chunk.js",
-    "main.js.map": "/dataviz-kuh-timeline/static/js/main.92592ca9.chunk.js.map",
+    "main.js": "/dataviz-kuh-timeline/static/js/main.cb8d28b5.chunk.js",
+    "main.js.map": "/dataviz-kuh-timeline/static/js/main.cb8d28b5.chunk.js.map",
     "runtime-main.js": "/dataviz-kuh-timeline/static/js/runtime-main.6a9c0da5.js",
     "runtime-main.js.map": "/dataviz-kuh-timeline/static/js/runtime-main.6a9c0da5.js.map",
     "static/css/2.5a2f7233.chunk.css": "/dataviz-kuh-timeline/static/css/2.5a2f7233.chunk.css",
     "static/js/2.e9bcef10.chunk.js": "/dataviz-kuh-timeline/static/js/2.e9bcef10.chunk.js",
     "static/js/2.e9bcef10.chunk.js.map": "/dataviz-kuh-timeline/static/js/2.e9bcef10.chunk.js.map",
     "index.html": "/dataviz-kuh-timeline/index.html",
-    "precache-manifest.55b29b7365994df5a15236f690341c96.js": "/dataviz-kuh-timeline/precache-manifest.55b29b7365994df5a15236f690341c96.js",
+    "precache-manifest.ff42c95f06de5806ac133563be5e7e7a.js": "/dataviz-kuh-timeline/precache-manifest.ff42c95f06de5806ac133563be5e7e7a.js",
     "service-worker.js": "/dataviz-kuh-timeline/service-worker.js",
     "static/css/2.5a2f7233.chunk.css.map": "/dataviz-kuh-timeline/static/css/2.5a2f7233.chunk.css.map",
     "static/css/main.69eda509.chunk.css.map": "/dataviz-kuh-timeline/static/css/main.69eda509.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.5a2f7233.chunk.css",
     "static/js/2.e9bcef10.chunk.js",
     "static/css/main.69eda509.chunk.css",
-    "static/js/main.92592ca9.chunk.js"
+    "static/js/main.cb8d28b5.chunk.js"
   ]
 }
