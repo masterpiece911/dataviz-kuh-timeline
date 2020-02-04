@@ -1,15 +1,20 @@
 import { kaiser } from '../data/kaiser';
 import { personen } from '../data/personen';
-import { filterPersonForCourt, filterKnownBirths, filterKnownDeaths, filterCertainDateOfBirths, filterCertainDateOfDeaths, filterCompleteDateOfBirths, filterCompleteDateOfDeaths, filterIncompleteDateOfBirths, filterIncompleteDateOfDeaths } from './filterFunctions';
+import { filterPersonForCourt, filterKnownBirths, filterKnownDeaths, filterCertainDateOfBirths, filterCertainDateOfDeaths, filterCompleteDateOfBirths, filterCompleteDateOfDeaths, filterIncompleteDateOfBirths, filterIncompleteDateOfDeaths, filterKnownDeathPlaces, filterKnownBirthPlaces, filterUnknownBirthPlaces, filterUnknownDeathPlaces } from './filterFunctions';
 
 const exactDoB = 'vollständiges Geburtsdatum';
 const unknownDoB = 'unbekanntes Geburtsdatum';
 const uncertainDoB = 'ungenaues Geburtsdatum';
 const incompleteDoB = 'unvollständiges Geburtsdatum';
+const knownPoB = 'bekannter Geburtsort';
+const unknownPoB = 'unbekannter Geburtsort';
 const exactDoD = 'vollständiges Todesdatum';
 const unknownDoD = 'unbekanntes Todesdatum';
 const uncertainDoD = 'ungenaues Todesdatum';
 const incompleteDoD = 'unvollständiges Todesdatum';
+const knownPoD = 'bekannter Todesort'; 
+const unknownPoD = 'unbekannter Todesort';
+
 
 const queries = [
   exactDoB,
@@ -20,6 +25,10 @@ const queries = [
   incompleteDoD,
   uncertainDoD,
   unknownDoD,
+  knownPoB,
+  unknownPoB,
+  knownPoD,
+  unknownPoD
 ]
 
 const query = (setParamOne, setParamTwo, setKaiserIDMethod) => {
@@ -63,6 +72,10 @@ const titleFunction = (court, category) => {
     case uncertainDoD: descriptor = 'mit ungenauem Todesdatum'; break;
     case incompleteDoB: descriptor = 'mit unvollständigem Geburtsdatum'; break;
     case incompleteDoD: descriptor = 'mit unvollständigem Todesdatum'; break;
+    case knownPoB: descriptor = 'mit bekanntem Geburtsort'; break;
+    case knownPoD: descriptor = 'mit bekanntem Todesort'; break;
+    case unknownPoB: descriptor = 'mit unbekanntem Geburtsort'; break;
+    case unknownPoD: descriptor = 'mit unbekanntem Todesort'; break;
     default: throw new Error('Unknown category in titleFunction of metaheuristics query');
   }
 
@@ -95,6 +108,11 @@ const metadata = (court, category) => {
     case uncertainDoD: persons = persons.filter(filterCertainDateOfDeaths); break;
     case incompleteDoB: persons = persons.filter(filterCompleteDateOfBirths); break;
     case incompleteDoD: persons = persons.filter(filterCompleteDateOfDeaths); break;
+    case unknownPoB: persons = persons.filter(filterKnownBirthPlaces); break;
+    case unknownPoD: persons = persons.filter(filterKnownDeathPlaces); break;
+    case knownPoB: persons = persons.filter(filterUnknownBirthPlaces); break;
+    case knownPoD: persons = persons.filter(filterUnknownDeathPlaces); break;
+
     default: throw new Error('Unknown category in data function of metaheuristics query');
   }
 
