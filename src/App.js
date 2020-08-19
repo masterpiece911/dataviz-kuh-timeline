@@ -396,7 +396,7 @@ function App() {
 
 
       <FlexibleWidthXYPlot
-        height={guiHeight() * 0.7}
+        height={guiHeight() * 0.7 + (guiHeight() * 0.25 * (4 + minimum()) * 0.25)}
         yDomain={[0, maximum()]}
         xDomain={range()}
         margin={{left: 40, right: 10, top: graphData.additional ? 72 : 10, bottom: 20}}
@@ -469,20 +469,20 @@ function App() {
 
 
         {graphCompareData !== null && graphCompareData.total
-        ? <AreaSeries fill={'#fff0'} stroke={red} data={graphCompareData.total} curve={'curveBasis'} />
+        ? <AreaSeries fill={'#fff0'} stroke={red} data={graphCompareData.total} curve={'curveBasis'} animation={null} />
         : null
         }
 
         {graphCompareData !== null
-        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph.map(e => {return{x: e.x, y: e.y}})} curve={'curveBasis'} />
+        ? <AreaSeries fill={'url(#redGradient)'} stroke={'#0000'} data={graphCompareData.graph.map(e => {return{x: e.x, y: e.y}})} curve={'curveBasis'} /*animation = {graphCompareData.total ? null : true}*/ />
         : null }
 
         {graphData.total
-        ? <AreaSeries fill={'#fff0'} stroke={blue} data={graphData.total} curve={'curveBasis'} />
+        ? <AreaSeries fill={'#fff0'} stroke={blue} data={graphData.total} curve={'curveBasis'} animation={null} />
         : null
         }
 
-        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph.map(e => {return({x: e.x,y: e.y})})} curve={'curveBasis'} />
+        <AreaSeries fill={'url(#blueGradient)'} stroke={'#0000'} data={graphData.graph.map(e => {return({x: e.x,y: e.y})})} curve={'curveBasis'} /*animation={graphData.total ? null : true} */ />
 
         {graphData.additional && paramCompare === ''
         ? graphData.additional.map((_, idx) => [
@@ -504,7 +504,7 @@ function App() {
 
       </FlexibleWidthXYPlot>
       <FlexibleWidthXYPlot
-        height={guiHeight() * 0.3}
+        height={guiHeight() * 0.25 * -1 * minimum() * 0.25}
         yDomain={[minimum(), 0]}
         xDomain={range()}
         margin={{left: 40, right: 10, top: 0, bottom: 10}}
